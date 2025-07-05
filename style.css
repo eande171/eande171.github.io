@@ -1,0 +1,38 @@
+:root{
+    --light-indigo: #44679C;
+    --indigo: #2B4162;
+    --dark-indigo: #131C2B;
+
+    --white: #E8F1F2;
+
+    --light-orange: #ff9233;
+    --orange: #FF7700;
+}
+
+html {
+    color: var(--white);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.name-text {
+    color: var(--white);
+    font-family: "Bitcount Grid Double";
+}
+
+.card-text,
+.card-title {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+a {
+    color: var(--orange);
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+    transform-origin: center center; 
+}
+
+a:hover {
+    transform: scale(1.05);
+    color: var(--light-orange);
+}
