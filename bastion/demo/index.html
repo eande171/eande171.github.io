@@ -245,7 +245,7 @@
                         <div class="usage-track">
                             <div class="usage-fill" id="usage-fill" style="width:0%"></div>
                         </div>
-                        <div class="usage-reset" id="usage-reset"></div>
+                        <div class="usage-reset" id="usage-reset">Resets each day</div>
                     </div>
                 </div>
 
@@ -483,9 +483,6 @@
             wrap.style.display = 'block';
             document.getElementById('usage-text').textContent = `${data.usage} / ${limit}`;
             document.getElementById('usage-fill').style.width = `${Math.min((data.usage / limit) * 100, 100)}%`;
-            const reset = new Date(data.reset_at);
-            document.getElementById('usage-reset').textContent =
-                `Resets ${reset.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} at ${reset.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
         } catch (_) {}
     }
 
