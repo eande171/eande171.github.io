@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bastion - Demo</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="../../projects/media/bastion.svg">
+
+    <link rel="stylesheet" href="../bastion.css">
+    <style>
+        /* Page header */
+        .page-header { padding: 4rem 0 3rem; border-bottom: 1px solid rgba(68, 103, 156, 0.2); }
+        .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.2; margin-bottom: 0.75rem; }
+        .page-header h1 span { color: var(--orange); }
+        .page-header p { font-size: 0.92rem; line-height: 1.8; color: rgba(232, 241, 242, 0.82); margin: 0; }
+
+        /* Panel label */
+        .panel-label { font-size: 0.76rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(232, 241, 242, 0.5); margin-bottom: 1.25rem; }
+
+        /* Input */
+        .input-wrap { position: relative; margin-bottom: 1rem; }
+        .bstn-input {
+            width: 100%;
+            background: rgba(19, 28, 43, 0.8);
+            border: 1px solid rgba(68, 103, 156, 0.35);
+            color: var(--white);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            padding: 0.8rem 3.5rem 0.8rem 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+            border-radius: 0;
+        }
+        .bstn-input:focus { border-color: var(--orange); }
+        .bstn-input::placeholder { color: rgba(232, 241, 242, 0.3); }
+
+        .toggle-vis {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(232, 241, 242, 0.4);
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-family: 'Outfit', sans-serif;
+            padding: 0;
+            transition: color 0.2s;
+        }
+        .toggle-vis:hover { color: var(--white); }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.88rem;
+            color: rgba(232, 241, 242, 0.78);
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-label input[type="checkbox"] { accent-color: var(--orange); width: 14px; height: 14px; cursor: pointer; }
+
+        /* Buttons */
+        .bstn-btn {
+            display: inline-block;
+            padding: 0.75rem 1.75rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.3s ease, color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+            transform-origin: center center;
+            border-radius: 0;
+        }
+        .bstn-btn:hover { transform: scale(1.02); }
+        .bstn-btn-primary { background: var(--orange); color: var(--dark-indigo) !important; width: 100%; }
+        .bstn-btn-primary:hover { background: var(--light-orange); }
+        .bstn-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .bstn-btn-outline { background: transparent; color: var(--white) !important; border: 1px solid rgba(232, 241, 242, 0.25); width: 100%; }
+        .bstn-btn-outline:hover { border-color: var(--orange); color: var(--orange) !important; }
+        .bstn-btn-outline:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Usage bar */
+        .usage-bar-wrap {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            background: rgba(43, 65, 98, 0.2);
+            border: 1px solid rgba(68, 103, 156, 0.2);
+        }
+        .usage-header { display: flex; justify-content: space-between; font-size: 0.78rem; color: rgba(232, 241, 242, 0.6); margin-bottom: 0.6rem; }
+        .usage-header span:last-child { color: var(--white); }
+        .usage-track { height: 3px; background: rgba(68, 103, 156, 0.25); }
+        .usage-fill { height: 3px; background: var(--orange); transition: width 0.4s ease; }
+        .usage-reset { font-size: 0.74rem; color: rgba(232, 241, 242, 0.4); margin-top: 0.5rem; }
+
+        /* Result panel */
+        .result-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 280px;
+            border: 1px dashed rgba(68, 103, 156, 0.25);
+            color: rgba(232, 241, 242, 0.25);
+            font-size: 0.82rem;
+            letter-spacing: 0.1em;
+        }
+
+        .result-content { display: none; }
+        .result-content.visible { display: block; }
+
+        .score-num { font-size: 3rem; font-weight: 700; line-height: 1; color: var(--orange); }
+        .score-label { font-size: 1rem; color: var(--white); }
+        .score-sub { font-size: 0.78rem; color: rgba(232, 241, 242, 0.5); margin-top: 0.2rem; }
+
+        .strength-track { height: 3px; background: rgba(68, 103, 156, 0.25); margin-bottom: 1.5rem; }
+        .strength-fill { height: 3px; transition: width 0.5s ease, background 0.5s ease; }
+
+        .field-item {
+            padding: 0.75rem;
+            background: rgba(19, 28, 43, 0.6);
+            border: 1px solid rgba(68, 103, 156, 0.2);
+            height: 100%;
+        }
+        .field-item-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232, 241, 242, 0.45); margin-bottom: 0.3rem; }
+        .field-item-value { font-size: 0.84rem; color: var(--white); word-break: break-word; font-family: 'JetBrains Mono', monospace; }
+        .field-item-desc { font-size: 0.7rem; color: rgba(232, 241, 242, 0.48); margin-top: 0.25rem; line-height: 1.5; }
+
+        .breach-banner { padding: 0.75rem 1rem; font-size: 0.84rem; margin-bottom: 0.75rem; border-left: 3px solid; }
+        .breach-yes  { background: rgba(220, 80, 60, 0.12); border-color: #dc503c; color: rgba(232, 241, 242, 0.88); }
+        .breach-no   { background: rgba(100, 180, 120, 0.1); border-color: #64b478; color: rgba(232, 241, 242, 0.88); }
+        .breach-skip { background: rgba(68, 103, 156, 0.15); border-color: var(--light-indigo); color: rgba(232, 241, 242, 0.72); }
+
+        .feedback-block {
+            padding: 0.75rem 1rem;
+            background: rgba(43, 65, 98, 0.2);
+            border: 1px solid rgba(68, 103, 156, 0.2);
+            font-size: 0.84rem;
+            line-height: 1.7;
+            color: rgba(232, 241, 242, 0.85);
+        }
+        .feedback-block .fb-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232, 241, 242, 0.4); margin-bottom: 0.4rem; }
+
+        .error-banner { padding: 0.75rem 1rem; background: rgba(220, 80, 60, 0.12); border-left: 3px solid #dc503c; font-size: 0.84rem; color: rgba(232, 241, 242, 0.88); }
+
+        /* Register */
+        .register-text h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; line-height: 1.3; }
+        .register-text h2 span { color: var(--orange); }
+        .register-text p { font-size: 0.9rem; line-height: 1.8; color: rgba(232, 241, 242, 0.82); margin-bottom: 0.75rem; }
+
+        .tier-compare { margin-top: 1.25rem; font-size: 0.82rem; }
+        .tier-row { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid rgba(68, 103, 156, 0.15); color: rgba(232, 241, 242, 0.78); }
+        .tier-row:last-child { border-bottom: none; }
+        .tier-name { font-weight: 600; color: var(--white); }
+        .tier-detail { color: rgba(232, 241, 242, 0.55); }
+
+        .form-label-custom { display: block; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232, 241, 242, 0.5); margin-bottom: 0.4rem; }
+
+        .register-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(19, 28, 43, 0.8);
+            border: 1px solid rgba(68, 103, 156, 0.3);
+            font-size: 0.82rem;
+            line-height: 1.8;
+            display: none;
+        }
+        .register-result.visible { display: block; }
+        .rr-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232, 241, 242, 0.4); margin-bottom: 0.3rem; }
+        .rr-val { color: var(--orange); word-break: break-all; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+        .rr-warn { margin-top: 0.75rem; font-size: 0.76rem; color: rgba(232, 241, 242, 0.55); border-top: 1px solid rgba(68, 103, 156, 0.2); padding-top: 0.6rem; }
+
+        .register-error { margin-top: 1rem; padding: 0.75rem 1rem; background: rgba(220, 80, 60, 0.1); border-left: 3px solid #dc503c; font-size: 0.84rem; color: rgba(232, 241, 242, 0.88); display: none; }
+        .register-error.visible { display: block; }
+    </style>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body>
+<script>
+    AOS.init();
+</script>
+
+<nav>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="../index.html" class="nav-logo">BASTION</a>
+            <div class="d-flex gap-4">
+                <a href="../index.html" class="nav-link-item">home</a>
+                <a href="../docs/index.html" class="nav-link-item">docs</a>
+                <a href="https://github.com/eande171/bastion" class="nav-link-item">github</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main>
+
+    <!-- Page header -->
+    <section class="page-header">
+        <div class="container" data-aos="fade-down">
+            <p class="section-label">Try it out</p>
+            <h1>See Bastion in <span>action</span>.</h1>
+            <p>Use the demo below to evaluate a password with no API key required. Demo requests are rate limited per IP &lpar;10/day&rpar;. To get persistent access, register for a free native key below.</p>
+        </div>
+    </section>
+
+    <!-- Demo -->
+    <section class="section-divider">
+        <div class="container">
+            <div class="row g-5">
+
+                <!-- Input col -->
+                <div class="col-12 col-md-5 col-lg-4" data-aos="fade-right">
+                    <p class="panel-label">Input</p>
+
+                    <div class="input-wrap">
+                        <input type="password" id="pw-input" class="bstn-input" placeholder="Enter a password..." autocomplete="off" />
+                        <button class="toggle-vis" id="toggle-vis" type="button">show</button>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="hibp-toggle" checked />
+                            Check HaveIBeenPwned
+                        </label>
+                    </div>
+
+                    <button class="bstn-btn bstn-btn-primary" id="eval-btn">Evaluate</button>
+
+                    <div class="usage-bar-wrap mt-3" id="usage-wrap" style="display:none">
+                        <div class="usage-header">
+                            <span>Demo usage</span>
+                            <span id="usage-text">- / -</span>
+                        </div>
+                        <div class="usage-track">
+                            <div class="usage-fill" id="usage-fill" style="width:0%"></div>
+                        </div>
+                        <div class="usage-reset" id="usage-reset"></div>
+                    </div>
+                </div>
+
+                <!-- Result col -->
+                <div class="col-12 col-md-7 col-lg-8" data-aos="fade-left">
+                    <p class="panel-label">Result</p>
+
+                    <div class="result-empty" id="result-empty">awaiting input</div>
+
+                    <div class="result-content" id="result-content">
+                        <div class="d-flex align-items-baseline gap-3 mb-3">
+                            <div>
+                                <div class="score-num" id="r-score">-</div>
+                                <div class="score-sub">score / 4</div>
+                            </div>
+                            <div>
+                                <div class="score-label" id="r-strength">-</div>
+                                <div class="score-sub" id="r-entropy">-</div>
+                            </div>
+                        </div>
+
+                        <div class="strength-track">
+                            <div class="strength-fill" id="r-bar" style="width:0%"></div>
+                        </div>
+
+                        <div id="r-breach"></div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <div class="field-item">
+                                    <div class="field-item-label">Online (throttled)</div>
+                                    <div class="field-item-value" id="r-ct-throttled">-</div>
+                                    <div class="field-item-desc">100 guesses/hr - typical login form</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="field-item">
+                                    <div class="field-item-label">Online (unthrottled)</div>
+                                    <div class="field-item-value" id="r-ct-unthrottled">-</div>
+                                    <div class="field-item-desc">10 guesses/sec - no rate limiting</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="field-item">
+                                    <div class="field-item-label">Offline (slow hash)</div>
+                                    <div class="field-item-value" id="r-ct-slow">-</div>
+                                    <div class="field-item-desc">bcrypt/scrypt - 10k guesses/sec</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="field-item">
+                                    <div class="field-item-label">Offline (fast hash)</div>
+                                    <div class="field-item-value" id="r-ct-fast">-</div>
+                                    <div class="field-item-desc">MD5/SHA-1 - 10B guesses/sec</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="r-feedback"></div>
+                    </div>
+
+                    <div class="error-banner mt-2" id="result-error" style="display:none"></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Register -->
+    <section id="register" class="section-divider">
+        <div class="container">
+            <div class="row g-5 align-items-start">
+
+                <div class="col-12 col-lg-5 register-text" data-aos="fade-right">
+                    <p class="section-label">Native key</p>
+                    <h2>More than <span>trying it out</span>?</h2>
+                    <p>Register for a free native key to get direct API access. No billing required. The free tier gives you 100 requests per day.</p>
+                    <p>Your email is hashed immediately on registration and is used only if you need to regenerate your key. It is never stored in plain text.</p>
+                    <div class="tier-compare">
+                        <div class="tier-row" data-aos="fade-in">
+                            <span class="tier-name">Demo</span>
+                            <span class="tier-detail">IP rate-limited, no key needed</span>
+                        </div>
+                        <div class="tier-row" data-aos="fade-in" data-aos-delay="100">
+                            <span class="tier-name">Free <span style="color:var(--orange)">← you're here</span></span>
+                            <span class="tier-detail">100 req/day, usage controls</span>
+                        </div>
+                        <div class="tier-row" data-aos="fade-in" data-aos-delay="200">
+                            <span class="tier-name">RapidAPI</span>
+                            <span class="tier-detail">Free and Paid tiers, <a href="https://rapidapi.com/eande171-RQXKDUFxT/api/password-strength-and-breach-detection-api">available now</a></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-7" data-aos="fade-left">
+                    <label class="form-label-custom" for="reg-email">Email address</label>
+                    <input type="email" id="reg-email" class="bstn-input mb-3" placeholder="you@example.com" autocomplete="off" />
+                    <button class="bstn-btn bstn-btn-outline" id="reg-btn">Register for a free key</button>
+
+                    <div class="register-result" id="reg-result">
+                        <div class="rr-label">API Key</div>
+                        <div class="rr-val" id="rr-key">-</div>
+                        <div class="mt-3">
+                            <div class="rr-label">Regeneration Token</div>
+                            <div class="rr-val" id="rr-regen">-</div>
+                        </div>
+                        <div class="rr-warn">Store both values securely. This regeneration token cannot be recovered after this page is closed.</div>
+                    </div>
+
+                    <div class="register-error" id="reg-error"></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <span>Bastion - built by <a href="https://github.com/eande171">Eden Anderson</a>. Licensed under GNU AGPL v3.</span>
+            <span>
+                <a href="https://github.com/eande171/bastion">GitHub</a>
+                &nbsp;·&nbsp;
+                <a href="../docs/">Docs</a>
+                &nbsp;·&nbsp;
+                <a href="https://rapidapi.com/eande171-RQXKDUFxT/api/password-strength-and-breach-detection-api">RapidAPI</a>
+            </span>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const BASE = 'https://bastion.eande171.workers.dev';
+
+    // Toggle visibility
+    const pwInput = document.getElementById('pw-input');
+    document.getElementById('toggle-vis').addEventListener('click', function() {
+        const hidden = pwInput.type === 'password';
+        pwInput.type = hidden ? 'text' : 'password';
+        this.textContent = hidden ? 'hide' : 'show';
+    });
+
+    // Evaluate
+    document.getElementById('eval-btn').addEventListener('click', evaluate);
+    pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') evaluate(); });
+
+    async function evaluate() {
+        const password = pwInput.value;
+        if (!password) return;
+        const skipHibp = !document.getElementById('hibp-toggle').checked;
+        const btn = document.getElementById('eval-btn');
+
+        btn.disabled = true;
+        btn.textContent = 'Evaluating...';
+        document.getElementById('result-error').style.display = 'none';
+
+        try {
+            const url = `${BASE}/v1/demo${skipHibp ? '?hibp=false' : ''}`;
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            });
+
+            if (!res.ok) {
+                const msg = await res.text();
+                showEvalError(msg);
+                return;
+            }
+
+            renderResult(await res.json(), skipHibp);
+            await fetchUsage();
+        } catch (e) {
+            showEvalError('Request failed. Please try again.');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Evaluate';
+        }
+    }
+
+    function renderResult(data, skipped) {
+        document.getElementById('result-empty').style.display = 'none';
+        document.getElementById('result-content').classList.add('visible');
+
+        document.getElementById('r-score').textContent    = data.score;
+        document.getElementById('r-strength').textContent = data.strength;
+        document.getElementById('r-entropy').textContent  = `${data.entropy_bits.toFixed(2)} bits entropy`;
+
+        const barColors = ['#dc503c','#e0763a','#e8a838','#8bbf6e','#4caf7d'];
+        const bar = document.getElementById('r-bar');
+        bar.style.width      = `${(data.score / 4) * 100}%`;
+        bar.style.background = barColors[data.score] || barColors[0];
+
+        document.getElementById('r-ct-throttled').textContent   = data.crack_times.online_throttled;
+        document.getElementById('r-ct-unthrottled').textContent = data.crack_times.online_unthrottled;
+        document.getElementById('r-ct-slow').textContent        = data.crack_times.offline_slow_hash;
+        document.getElementById('r-ct-fast').textContent        = data.crack_times.offline_fast_hash;
+
+        const breachEl = document.getElementById('r-breach');
+        if (skipped) {
+            breachEl.innerHTML = `<div class="breach-banner breach-skip">Breach check skipped.</div>`;
+        } else if (data.breached === true) {
+            breachEl.innerHTML = `<div class="breach-banner breach-yes">⚠ Found in <strong>${data.breach_count.toLocaleString()}</strong> known breach${data.breach_count === 1 ? '' : 'es'}. Avoid this password.</div>`;
+        } else if (data.breached === false) {
+            breachEl.innerHTML = `<div class="breach-banner breach-no">✓ Not found in known breaches.</div>`;
+        } else {
+            breachEl.innerHTML = `<div class="breach-banner breach-skip">Breach data unavailable.</div>`;
+        }
+
+        let fbHtml = '';
+        if (data.warning || (data.suggestions && data.suggestions.length)) {
+            fbHtml = `<div class="feedback-block">`;
+            if (data.warning) fbHtml += `<div class="fb-label">Warning</div><div>${data.warning}</div>`;
+            if (data.suggestions && data.suggestions.length) {
+                fbHtml += data.warning ? `<div class="mt-2">` : ``;
+                fbHtml += `<div class="fb-label">Suggestions</div>`;
+                data.suggestions.forEach(s => { fbHtml += `<div>- ${s}</div>`; });
+                fbHtml += data.warning ? `</div>` : ``;
+            }
+            fbHtml += `</div>`;
+        }
+        document.getElementById('r-feedback').innerHTML = fbHtml;
+    }
+
+    async function fetchUsage() {
+        try {
+            const res = await fetch(`${BASE}/v1/demo/usage`);
+            if (!res.ok) return;
+            const data = await res.json();
+            const limit = 10; 
+            const wrap = document.getElementById('usage-wrap');
+            wrap.style.display = 'block';
+            document.getElementById('usage-text').textContent = `${data.usage} / ${limit}`;
+            document.getElementById('usage-fill').style.width = `${Math.min((data.usage / limit) * 100, 100)}%`;
+            const reset = new Date(data.reset_at);
+            document.getElementById('usage-reset').textContent =
+                `Resets ${reset.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} at ${reset.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
+        } catch (_) {}
+    }
+
+    function showEvalError(msg) {
+        const el = document.getElementById('result-error');
+        el.textContent = msg;
+        el.style.display = 'block';
+        document.getElementById('result-empty').style.display = 'none';
+    }
+
+    // Register
+    document.getElementById('reg-btn').addEventListener('click', register);
+
+    async function register() {
+        const email = document.getElementById('reg-email').value.trim();
+        if (!email) return;
+        const btn = document.getElementById('reg-btn');
+        const errEl = document.getElementById('reg-error');
+        const resEl = document.getElementById('reg-result');
+
+        btn.disabled = true;
+        btn.textContent = 'Registering...';
+        errEl.classList.remove('visible');
+        resEl.classList.remove('visible');
+
+        try {
+            const res = await fetch(`${BASE}/v1/keys/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const text = await res.text();
+            if (!res.ok) {
+                errEl.textContent = text;
+                errEl.classList.add('visible');
+                return;
+            }
+            const data = JSON.parse(text);
+            document.getElementById('rr-key').textContent   = data.api_key;
+            document.getElementById('rr-regen').textContent = data.regen_token;
+            resEl.classList.add('visible');
+        } catch (e) {
+            errEl.textContent = 'Registration failed. Please try again.';
+            errEl.classList.add('visible');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Register for a free key';
+        }
+    }
+
+    fetchUsage();
+</script>
+</body>
+</html>

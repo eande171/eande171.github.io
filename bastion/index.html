@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bastion - Password Audit API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="icon" type="image/svg+xml" href="../projects/media/bastion.svg">
+    
+    <link rel="stylesheet" href="bastion.css">
+    <style>
+        /* Hero */
+        .hero { padding: 6rem 0 5rem; text-align: center; }
+
+        .bstn-tag {
+            display: inline-block;
+            font-size: 0.76rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--orange);
+            border: 1px solid rgba(255, 119, 0, 0.3);
+            padding: 0.3rem 0.85rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.1s;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.25s;
+        }
+        .hero h1 span { color: var(--orange); }
+
+        .hero-sub {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(232, 241, 242, 0.85);
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.4s;
+        }
+
+        .cta-group { opacity: 0; animation: fadeUp 0.6s ease forwards 0.55s; }
+
+        /* Buttons */
+        .bstn-btn {
+            display: inline-block;
+            padding: 0.75rem 1.75rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.3s ease, color 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+            transform-origin: center center;
+        }
+        .bstn-btn:hover { transform: scale(1.05); }
+        .bstn-btn-primary { background: var(--orange); color: var(--dark-indigo) !important; }
+        .bstn-btn-primary:hover { background: var(--light-orange); }
+        .bstn-btn-secondary { background: transparent; color: var(--white) !important; border: 1px solid rgba(232, 241, 242, 0.25); }
+        .bstn-btn-secondary:hover { border-color: rgba(232, 241, 242, 0.6); }
+
+        /* Feature cards */
+        .feature-card {
+            background: rgba(43, 65, 98, 0.2);
+            border: 1px solid rgba(68, 103, 156, 0.2);
+            padding: 1.5rem;
+            height: 100%;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        .feature-card:hover { border-color: rgba(255, 119, 0, 0.3); background: rgba(43, 65, 98, 0.35); }
+        .feature-icon { font-size: 1.3rem; margin-bottom: 0.75rem; }
+        .feature-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .feature-desc { font-size: 0.88rem; line-height: 1.7; color: rgba(232, 241, 242, 0.82); margin: 0; }
+
+        /* Code block */
+        .code-block {
+            background: rgba(19, 28, 43, 0.85);
+            border: 1px solid rgba(68, 103, 156, 0.25);
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .code-block .comment { color: rgba(68, 103, 156, 0.9); }
+        .code-block .key     { color: var(--light-indigo); }
+        .code-block .str     { color: rgba(232, 241, 242, 0.75); }
+        .code-block .num     { color: var(--light-orange); }
+        .code-block .bool-true { color: #7ec8a0; }
+
+        /* Badges */
+        .bstn-badge {
+            font-size: 0.74rem;
+            letter-spacing: 0.08em;
+            padding: 0.25rem 0.7rem;
+            border: 1px solid rgba(68, 103, 156, 0.5);
+            color: rgba(232, 241, 242, 0.82);
+            display: inline-block;
+        }
+
+        /* Preview */
+        .preview-text h2 { font-size: 1.6rem; font-weight: 700; line-height: 1.3; margin-bottom: 1rem; }
+        .preview-text h2 span { color: var(--orange); }
+        .preview-text p { font-size: 0.92rem; line-height: 1.8; color: rgba(232, 241, 242, 0.82); margin-bottom: 0.75rem; }
+
+        /* Security */
+        .security-list { list-style: none; padding: 0; margin: 0; }
+        .security-list li {
+            font-size: 0.92rem;
+            line-height: 1.7;
+            color: rgba(232, 241, 242, 0.85);
+            padding-left: 1.25rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        .security-list li::before { content: '-'; position: absolute; left: 0; color: var(--orange); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body>
+<script>
+    AOS.init();
+</script>
+
+<nav>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="./index.html" class="nav-logo">BASTION</a>
+            <div class="d-flex gap-4">
+                <a href="./demo/index.html" class="nav-link-item">try it</a>
+                <a href="./docs/index.html" class="nav-link-item">docs</a>
+                <a href="https://github.com/eande171/bastion" class="nav-link-item">github</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <div class="bstn-tag">Password Audit API</div>
+                    <h1>Know if a password<br>is actually <span>secure</span>.</h1>
+                    <p class="hero-sub mb-5">
+                        Bastion analyses passwords and returns strength scores, crack time estimates,
+                        entropy, and real breach data. Without ever storing, logging, or exposing the raw password.
+                    </p>
+                    <div class="cta-group d-flex flex-wrap gap-3 justify-content-center">
+                        <a class="bstn-btn bstn-btn-primary" href="https://rapidapi.com/eande171-RQXKDUFxT/api/password-strength-and-breach-detection-api">Get started on RapidAPI</a>
+                        <a class="bstn-btn bstn-btn-secondary" href="demo/index.html">Try the Demo</a>
+                        <a class="bstn-btn bstn-btn-secondary" href="https://github.com/eande171/bastion">View on GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section-divider">
+        <div class="container">
+            <p class="section-label">What you get back</p>
+            <div class="row g-3">
+                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-title">Strength Score</div>
+                        <p class="feature-desc">0–4 score and human-readable label (Very Weak → Very Strong) using the zxcvbn algorithm.</p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon">⏱</div>
+                        <div class="feature-title">Crack Time Estimates</div>
+                        <p class="feature-desc">Estimated crack times across four attack scenarios. Throttled/Unthrottled online and fast/slow offline.</p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔎</div>
+                        <div class="feature-title">Breach Detection</div>
+                        <p class="feature-desc">Checks the HaveIBeenPwned database via k-anonymity. Only a partial hash is ever sent.</p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon">💡</div>
+                        <div class="feature-title">Actionable Feedback</div>
+                        <p class="feature-desc">Warnings and suggestions grounded in how passwords actually get cracked. Not just "add a symbol".</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Preview -->
+    <section class="section-divider">
+        <div class="container">
+            <div class="row g-5 align-items-start">
+                <div class="col-12 col-lg-5 preview-text" data-aos="fade-right">
+                    <p class="section-label">Response shape</p>
+                    <h2>Everything you need,<br>nothing you <span>don't</span>.</h2>
+                    <p>A single <code>POST</code> to <code>/v1/evaluate</code> returns a complete picture of a password's security. Breach checking is optional. Use <code>?hibp=false</code> to skip it.</p>
+                    <p>Available now on RapidAPI. Native keys available directly &lpar;free tier includes 100 requests per day&rpar;.</p>
+                    <div class="d-flex flex-wrap gap-2 mt-4">
+                        <span class="bstn-badge">Rust + WASM</span>
+                        <span class="bstn-badge">Cloudflare Workers</span>
+                        <span class="bstn-badge">zxcvbn</span>
+                        <span class="bstn-badge">HaveIBeenPwned</span>
+                        <span class="bstn-badge">AGPL v3</span>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-7" data-aos="fade-left">
+                    <div class="code-block"><span class="comment">// POST /v1/evaluate</span>
+<span class="comment">// { "password": "hunter2" }</span>
+
+{
+    <span class="key">"score"</span>: <span class="num">1</span>,
+    <span class="key">"strength"</span>: <span class="str">"Weak"</span>,
+    <span class="key">"entropy_bits"</span>: <span class="num">12.97244</span>,
+    <span class="key">"crack_times"</span>: {
+        <span class="key">"online_throttled"</span>: <span class="str">"3 days"</span>,
+        <span class="key">"online_unthrottled"</span>: <span class="str">"13 minutes"</span>,
+        <span class="key">"offline_slow_hash"</span>: <span class="str">"less than a second"</span>,
+        <span class="key">"offline_fast_hash"</span>: <span class="str">"less than a second"</span>
+    },
+    <span class="key">"breached"</span>: <span class="bool-true">true</span>,
+    <span class="key">"breach_count"</span>: <span class="num">65744</span>,
+    <span class="key">"warning"</span>: <span class="str">"This is a very common password."</span>,
+    <span class="key">"suggestions"</span>: [
+        <span class="str">"Add another word or two. Uncommon words are better."</span>
+    ]
+}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security -->
+    <section class="section-divider">
+        <div class="container">
+            <p class="section-label">Security practices</p>
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <ul class="security-list">
+                        <li data-aos="fade-right">Raw passwords are never stored, logged, or transmitted to any third party</li>
+                        <li data-aos="fade-right" data-aos-delay="100">Breach checks use k-anonymity. Only the first 5 characters of a SHA-1 hash are sent to HaveIBeenPwned</li>
+                        <li data-aos="fade-right" data-aos-delay="200">Passwords are zeroed from memory immediately after processing</li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md-6">
+                    <ul class="security-list">
+                        <li data-aos="fade-left" data-aos-delay="300">Email addresses are hashed before storage and used only for key regeneration</li>
+                        <li data-aos="fade-left" data-aos-delay="400">API keys and regeneration tokens are hashed before storage</li>
+                        <li data-aos="fade-left" data-aos-delay="500">IP addresses used for demo rate limiting are hashed and are deleted after 24 hours</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <span>Bastion - built by <a href="https://github.com/eande171">Eden Anderson</a>. Licensed under GNU AGPL v3.</span>
+            <span>
+                <a href="https://github.com/eande171/bastion">GitHub</a>
+                &nbsp;·&nbsp;
+                <a href="./docs/index.html">Docs</a>
+                &nbsp;·&nbsp;
+                <a href="https://rapidapi.com/eande171-RQXKDUFxT/api/password-strength-and-breach-detection-api">RapidAPI</a>
+            </span>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

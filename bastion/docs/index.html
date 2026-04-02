@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bastion - Documentation</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="../../projects/media/bastion.svg">
+
+    <link rel="stylesheet" href="../bastion.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        a:hover { transform: scale(1.04); color: var(--light-orange); }
+
+        /* Custom scrollbar handling and sticky positioning kept */
+        .sidebar {
+            padding: 2.5rem 0;
+            position: sticky;
+            top: 1rem; /* Adjusted for natural flow */
+            height: calc(100vh - 2rem);
+            overflow-y: auto;
+            border-right: 1px solid rgba(68, 103, 156, 0.2);
+            scrollbar-width: none;
+        }
+        .sidebar::-webkit-scrollbar { display: none; }
+
+        .sidebar-group { margin-bottom: 2rem; }
+        .sidebar-group-label {
+            font-size: 0.68rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(232, 241, 242, 0.35);
+            margin-bottom: 0.6rem;
+            padding-right: 1rem;
+        }
+
+        .sidebar-link {
+            display: block;
+            font-size: 0.88rem;
+            color: rgba(232, 241, 242, 0.65) !important;
+            padding: 0.3rem 0;
+            padding-right: 1rem;
+            transition: color 0.2s ease;
+            transform: none !important;
+            border-left: 2px solid transparent;
+            padding-left: 0.75rem;
+            text-decoration: none;
+        }
+        .sidebar-link:hover { color: var(--white) !important; transform: none !important; }
+        .sidebar-link.active { color: var(--orange) !important; border-left-color: var(--orange); }
+
+        .method-pill {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.1rem 0.4rem;
+            margin-right: 0.4rem;
+            vertical-align: middle;
+            border-radius: 4px;
+        }
+        .pill-post  { background: rgba(255, 119, 0, 0.15); color: var(--orange); }
+        .pill-get   { background: rgba(100, 180, 120, 0.15); color: #7ec8a0; }
+        .pill-patch { background: rgba(68, 103, 156, 0.3); color: var(--light-indigo); }
+
+        .docs-content {
+            padding: 2.5rem 0 4rem;
+            /* Max width kept to ensure optimal reading line-length (approx 70-80 chars) */
+            max-width: 800px; 
+        }
+
+        .docs-section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 80px;
+        }
+
+        .section-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 0.75rem;
+            opacity: 0.85;
+        }
+
+        .docs-section h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(68, 103, 156, 0.2);
+        }
+
+        .docs-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .docs-section p {
+            font-size: 0.92rem;
+            line-height: 1.8;
+            color: rgba(232, 241, 242, 0.85);
+            margin-bottom: 1rem;
+        }
+
+        .docs-section ul {
+            font-size: 0.92rem;
+            line-height: 1.8;
+            color: rgba(232, 241, 242, 0.85);
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .endpoint-block {
+            margin-bottom: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid rgba(68, 103, 156, 0.15);
+        }
+        .endpoint-block:last-child { border-bottom: none; }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .method-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            flex-shrink: 0;
+            border-radius: 4px;
+        }
+        .method-post  { background: rgba(255, 119, 0, 0.12); color: var(--orange); border: 1px solid rgba(255, 119, 0, 0.3); }
+        .method-get   { background: rgba(100, 180, 120, 0.1); color: #7ec8a0; border: 1px solid rgba(100, 180, 120, 0.3); }
+        .method-patch { background: rgba(68, 103, 156, 0.2); color: var(--light-indigo); border: 1px solid rgba(68, 103, 156, 0.4); }
+
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.92rem;
+            color: var(--white);
+        }
+
+        .endpoint-desc {
+            font-size: 0.92rem;
+            line-height: 1.8;
+            color: rgba(232, 241, 242, 0.82);
+            margin-bottom: 1.25rem;
+        }
+
+        .code-block {
+            background: rgba(19, 28, 43, 0.9);
+            border: 1px solid rgba(68, 103, 156, 0.25);
+            padding: 1.25rem 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            white-space: pre;
+            margin-bottom: 1rem;
+            position: relative;
+            border-radius: 4px;
+        }
+        .code-block .comment  { color: rgba(68, 103, 156, 0.9); }
+        .code-block .key      { color: var(--light-indigo); }
+        .code-block .str      { color: rgba(232, 241, 242, 0.75); }
+        .code-block .num      { color: var(--light-orange); }
+        .code-block .bool-t   { color: #7ec8a0; }
+        .code-block .bool-f   { color: #dc503c; }
+        .code-block .kw       { color: var(--light-orange); }
+        .code-block .fn       { color: #7ec8a0; }
+
+        .code-label {
+            font-size: 0.68rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(232, 241, 242, 0.35);
+            margin-bottom: 0.4rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .code-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+        .code-tab {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            padding: 0.4rem 0.9rem;
+            background: rgba(19, 28, 43, 0.5);
+            border: 1px solid rgba(68, 103, 156, 0.25);
+            border-bottom: none;
+            color: rgba(232, 241, 242, 0.45);
+            cursor: pointer;
+            transition: color 0.2s, background 0.2s;
+            border-radius: 4px 4px 0 0;
+        }
+        .code-tab.active {
+            background: rgba(19, 28, 43, 0.9);
+            color: var(--orange);
+        }
+        .code-tab:hover:not(.active) { color: var(--white); }
+
+        .code-panel { display: none; }
+        .code-panel.active { display: block; }
+        .code-panel .code-block { margin-bottom: 0; border-top-left-radius: 0; }
+
+        /* Tables styled customly, but we'll use BS responsive wrappers in HTML */
+        .param-table, .error-table {
+            width: 100%;
+            font-size: 0.84rem;
+            border-collapse: collapse;
+            margin-bottom: 1.25rem;
+            min-width: 600px; /* Forces horizontal scroll on very small screens instead of wrapping awkwardly */
+        }
+        
+        .param-table th, .error-table th {
+            font-size: 0.68rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(232, 241, 242, 0.4);
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid rgba(68, 103, 156, 0.25);
+            text-align: left;
+        }
+        .param-table td, .error-table td {
+            padding: 0.6rem 0.75rem;
+            border-bottom: 1px solid rgba(68, 103, 156, 0.1);
+            color: rgba(232, 241, 242, 0.82);
+            vertical-align: top;
+        }
+        .param-table tr:last-child td, .error-table tr:last-child td { border-bottom: none; }
+        .param-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--light-orange); }
+        .error-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: rgba(232, 241, 242, 0.9); }
+
+        .status-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+        }
+        .status-401 { color: #e0763a; background: rgba(224, 118, 58, 0.1); }
+        .status-400 { color: #e8a838; background: rgba(232, 168, 56, 0.1); }
+        .status-429 { color: #dc503c; background: rgba(220, 80, 60, 0.1); }
+
+        .callout {
+            padding: 0.9rem 1.1rem;
+            border-left: 3px solid;
+            font-size: 0.88rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+            color: rgba(232, 241, 242, 0.85);
+            border-radius: 0 4px 4px 0;
+        }
+        .callout-warn   { background: rgba(232, 168, 56, 0.08); border-color: #e8a838; }
+        .callout-info   { background: rgba(68, 103, 156, 0.15); border-color: var(--light-indigo); }
+        .callout-secure { background: rgba(100, 180, 120, 0.08); border-color: #7ec8a0; }
+
+        .auth-required {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0.2rem 0.6rem;
+            background: rgba(255, 119, 0, 0.08);
+            border: 1px solid rgba(255, 119, 0, 0.25);
+            color: var(--orange);
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        .auth-none {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0.2rem 0.6rem;
+            background: rgba(68, 103, 156, 0.12);
+            border: 1px solid rgba(68, 103, 156, 0.3);
+            color: var(--light-indigo);
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+    </style>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body>
+<script>
+    AOS.init();
+</script>
+
+<nav>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="../index.html" class="nav-logo">BASTION</a>
+            <div class="d-flex gap-4">
+                <a href="../index.html" class="nav-link-item">home</a>
+                <a href="../demo/index.html" class="nav-link-item">try it</a>
+                <a href="https://github.com/eande171/bastion" class="nav-link-item">github</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Implemented Bootstrap Container and Grid System -->
+<div class="container mt-3 px-4 px-md-2">
+    <div class="row gx-lg-5">
+        
+        <!-- Sidebar: d-none hides on mobile, d-md-block shows on screens 768px+ -->
+        <aside class="col-md-4 col-lg-3 d-none d-md-block sidebar">
+            <div class="sidebar-group">
+                <div class="sidebar-group-label" data-aos="fade-right" data-aos-once="true">Overview</div>
+                <a href="#getting-started" class="sidebar-link active" data-aos="fade-right" data-aos-delay="100" data-aos-once="true">Getting started</a>
+                <a href="#authentication" class="sidebar-link" data-aos="fade-right" data-aos-delay="200" data-aos-once="true">Authentication</a>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-group-label" data-aos="fade-right" data-aos-delay="300" data-aos-once="true">Endpoints</div>
+                <a href="#evaluate" class="sidebar-link" data-aos="fade-right" data-aos-delay="400" data-aos-once="true"><span class="method-pill pill-post">POST</span>/v1/evaluate</a>
+                <a href="#keys-register" class="sidebar-link" data-aos="fade-right" data-aos-delay="500" data-aos-once="true"><span class="method-pill pill-post">POST</span>/v1/keys/register</a>
+                <a href="#keys-regenerate" class="sidebar-link" data-aos="fade-right" data-aos-delay="600" data-aos-once="true"><span class="method-pill pill-post">POST</span>/v1/keys/regenerate</a>
+                <a href="#keys-usage" class="sidebar-link" data-aos="fade-right" data-aos-delay="700" data-aos-once="true"><span class="method-pill pill-get">GET</span>/v1/keys/usage</a>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-group-label" data-aos="fade-right" data-aos-delay="800" data-aos-once="true">Reference</div>
+                <a href="#errors" class="sidebar-link" data-aos="fade-right" data-aos-delay="900" data-aos-once="true">Error reference</a>
+                <a href="#examples" class="sidebar-link" data-aos="fade-right" data-aos-delay="1000" data-aos-once="true">Code examples</a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="col-12 col-md-7 offset-md-1 col-lg-8 docs-content">
+
+            <!-- Getting Started -->
+            <section class="docs-section" id="getting-started" data-aos="fade-left">
+                <p class="section-label">Overview</p>
+                <h2>Getting started</h2>
+                <p>Bastion is a password audit API. It evaluates passwords and returns strength scores, crack time estimates, entropy, and real breach data.</p>
+                <p>The base URL for the native API is:</p>
+                <div class="code-block">https://bastion.eande171.workers.dev</div>
+
+                <h3>Free tier access</h3>
+                <p>Native keys are for the free tier. They allow you to use all endpoints with a limit of 100 requests per day. If you need higher limits, use the <a href="https://rapidapi.com/eande171-RQXKDUFxT/api/password-strength-and-breach-detection-api" class="text-info">RapidAPI listing</a>.</p>
+
+                <h3>Your first request</h3>
+                <p>Register for a native key using your email. The email is hashed immediately before storage and is only used if you need to regenerate your key. You can also register <a href="../demo/index.html#register" class="text-info">here</a>.</p>
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab(this, 'gs-register')">JavaScript</button>
+                    <button class="code-tab" onclick="switchTab(this, 'gs-register-curl')">cURL</button>
+                </div>
+                <div id="gs-register" class="code-panel active">
+                    <div class="code-block"><span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"https://bastion.eande171.workers.dev/v1/keys/register"</span>, {
+  method: <span class="str">"POST"</span>,
+  headers: { <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span> },
+  body: <span class="fn">JSON.stringify</span>({ email: <span class="str">"you@example.com"</span> })
+});
+<span class="kw">const</span> { api_key, regen_token } = <span class="kw">await</span> res.<span class="fn">json</span>();</div>
+                </div>
+                <div id="gs-register-curl" class="code-panel">
+                    <div class="code-block">curl -X POST https://bastion.eande171.workers.dev/v1/keys/register \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"email": "you@example.com"}'</span></div>
+                </div>
+
+                <div class="callout callout-warn mt-3">
+                    Store your <code>api_key</code> and <code>regen_token</code> securely. The regeneration token cannot be recovered after registration.
+                </div>
+
+                <p>Then evaluate a password using your new key:</p>
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab(this, 'gs-eval')">JavaScript</button>
+                    <button class="code-tab" onclick="switchTab(this, 'gs-eval-curl')">cURL</button>
+                </div>
+                <div id="gs-eval" class="code-panel active">
+                    <div class="code-block"><span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"https://bastion.eande171.workers.dev/v1/evaluate"</span>, {
+  method: <span class="str">"POST"</span>,
+  headers: {
+    <span class="str">"Authorization"</span>: <span class="str">"Bearer bsn_live_..."</span>,
+    <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>
+  },
+  body: <span class="fn">JSON.stringify</span>({ password: <span class="str">"hunter2"</span> })
+});
+<span class="kw">const</span> result = <span class="kw">await</span> res.<span class="fn">json</span>();</div>
+                </div>
+                <div id="gs-eval-curl" class="code-panel">
+                    <div class="code-block">curl -X POST https://bastion.eande171.workers.dev/v1/evaluate \
+  -H <span class="str">"Authorization: Bearer bsn_live_..."</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"password": "hunter2"}'</span></div>
+                </div>
+            </section>
+
+            <!-- Authentication -->
+            <section class="docs-section" id="authentication" data-aos="fade-left">
+                <p class="section-label">Overview</p>
+                <h2>Authentication</h2>
+                <p>Native API keys must be passed in the <code>Authorization</code> header using the <code>Bearer</code> scheme:</p>
+                <div class="code-block">Authorization: Bearer bsn_live_...</div>
+                
+                <!-- Added table-responsive wrapper for small screens -->
+                <div class="table-responsive">
+                    <table class="param-table">
+                        <thead>
+                            <tr><th>Prefix</th><th>Purpose</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>bsn_live_</td><td>Live API key - used for authenticated requests</td></tr>
+                            <tr><td>bsn_regen_</td><td>Regeneration token - used to issue a new key if one is compromised</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout callout-info">
+                    If you're accessing Bastion via RapidAPI, authentication is handled automatically by RapidAPI's proxy. You do not need to set an <code>Authorization</code> header.
+                </div>
+            </section>
+
+            <!-- Endpoint Reference -->
+            <section class="docs-section" id="evaluate">
+                <p class="section-label">Endpoints</p>
+                <h2>Endpoint reference</h2>
+
+                <!-- POST /v1/evaluate -->
+                <div class="endpoint-block" data-aos="fade-left">
+                    <div class="endpoint-header">
+                        <span class="method-badge method-post">POST</span>
+                        <span class="endpoint-path">/v1/evaluate</span>
+                    </div>
+                    <div class="auth-required">🔑 Requires authentication</div>
+                    <p class="endpoint-desc">Evaluates a password and returns a full audit result including strength score, crack times, entropy, breach status, and feedback.</p>
+
+                    <h3>Query parameters</h3>
+                    <!-- Added table-responsive -->
+                    <div class="table-responsive">
+                        <table class="param-table">
+                            <thead><tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+                            <tbody>
+                                <tr><td>hibp</td><td>string</td><td>true</td><td>Set to <code>false</code> to skip the HaveIBeenPwned breach check. <code>breached</code> and <code>breach_count</code> will be <code>null</code> in the response.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Request body</h3>
+                    <div class="code-block">{
+  <span class="key">"password"</span>: <span class="str">"hunter2"</span>
+}</div>
+
+                    <h3>Response</h3>
+                    <div class="code-block">{
+  <span class="key">"score"</span>: <span class="num">1</span>,
+  <span class="key">"strength"</span>: <span class="str">"Weak"</span>,
+  <span class="key">"entropy_bits"</span>: <span class="num">12.972441366563533</span>,
+  <span class="key">"crack_times"</span>: {
+    <span class="key">"online_throttled"</span>: <span class="str">"3 days"</span>,
+    <span class="key">"online_unthrottled"</span>: <span class="str">"13 minutes"</span>,
+    <span class="key">"offline_slow_hash"</span>: <span class="str">"less than a second"</span>,
+    <span class="key">"offline_fast_hash"</span>: <span class="str">"less than a second"</span>
+  },
+  <span class="key">"breached"</span>: <span class="bool-t">true</span>,
+  <span class="key">"breach_count"</span>: <span class="num">65744</span>,
+  <span class="key">"warning"</span>: <span class="str">"This is a very common password."</span>,
+  <span class="key">"suggestions"</span>: [<span class="str">"Add another word or two. Uncommon words are better."</span>]
+}</div>
+
+                    <!-- Added table-responsive -->
+                    <div class="table-responsive">
+                        <table class="param-table">
+                            <thead><tr><th>Field</th><th>Description</th></tr></thead>
+                            <tbody>
+                                <tr><td>score</td><td>0 (Very Weak) to 4 (Very Strong)</td></tr>
+                                <tr><td>strength</td><td>Human-readable label corresponding to the score</td></tr>
+                                <tr><td>entropy_bits</td><td>Password entropy in bits</td></tr>
+                                <tr><td>crack_times</td><td>Estimated time to crack under four attack scenarios - throttled online, unthrottled online, slow offline hash, and fast offline hash</td></tr>
+                                <tr><td>breached</td><td>Whether the password appears in known breaches. <code>null</code> if <code>hibp=false</code></td></tr>
+                                <tr><td>breach_count</td><td>Number of times seen in known breaches. <code>null</code> if <code>hibp=false</code></td></tr>
+                                <tr><td>warning</td><td>A specific weakness warning, or <code>null</code> for stronger passwords</td></tr>
+                                <tr><td>suggestions</td><td>Improvement suggestions, or <code>null</code> for stronger passwords</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- POST /v1/keys/register -->
+                <div class="endpoint-block" id="keys-register" data-aos="fade-left">
+                    <div class="endpoint-header">
+                        <span class="method-badge method-post">POST</span>
+                        <span class="endpoint-path">/v1/keys/register</span>
+                    </div>
+                    <div class="auth-none">No authentication required</div>
+                    <p class="endpoint-desc">Registers a new API key. Each email address can only be registered once. The email is hashed immediately before storage.</p>
+
+                    <h3>Request body</h3>
+                    <div class="code-block">{
+  <span class="key">"email"</span>: <span class="str">"you@example.com"</span>
+}</div>
+
+                    <h3>Response</h3>
+                    <div class="code-block">{
+  <span class="key">"api_key"</span>: <span class="str">"bsn_live_..."</span>,
+  <span class="key">"regen_token"</span>: <span class="str">"bsn_regen_..."</span>
+}</div>
+                    <div class="callout callout-warn">Store both values securely. This regeneration token cannot be recovered after this response.</div>
+                </div>
+
+                <!-- POST /v1/keys/regenerate -->
+                <div class="endpoint-block" id="keys-regenerate" data-aos="fade-left">
+                    <div class="endpoint-header">
+                        <span class="method-badge method-post">POST</span>
+                        <span class="endpoint-path">/v1/keys/regenerate</span>
+                    </div>
+                    <div class="auth-none">No authentication required</div>
+                    <p class="endpoint-desc">Invalidates the current API key and issues a new one. Useful if a key is compromised. A new regeneration token is also issued.</p>
+
+                    <h3>Request body</h3>
+                    <div class="code-block">{
+  <span class="key">"email"</span>: <span class="str">"you@example.com"</span>,
+  <span class="key">"regen_token"</span>: <span class="str">"bsn_regen_..."</span>
+}</div>
+
+                    <h3>Response</h3>
+                    <div class="code-block">{
+  <span class="key">"api_key"</span>: <span class="str">"bsn_live_..."</span>,
+  <span class="key">"regen_token"</span>: <span class="str">"bsn_regen_..."</span>
+}</div>
+                    <div class="callout callout-warn">The old key is immediately invalidated. Store the new regeneration token. If it is lost, the key cannot be regenerated.</div>
+                </div>
+
+                <!-- GET /v1/keys/usage -->
+                <div class="endpoint-block" id="keys-usage" data-aos="fade-left">
+                    <div class="endpoint-header">
+                        <span class="method-badge method-get">GET</span>
+                        <span class="endpoint-path">/v1/keys/usage</span>
+                    </div>
+                    <div class="auth-required">🔑 Requires authentication</div>
+                    <p class="endpoint-desc">Returns current usage statistics for the authenticated key. Free tier keys are capped at 100 requests per day.</p>
+
+                    <h3>Response</h3>
+                    <div class="code-block">{
+  <span class="key">"tier"</span>: <span class="str">"Free"</span>,
+  <span class="key">"usage"</span>: <span class="num">42</span>,
+  <span class="key">"limit"</span>: <span class="num">100</span>,
+  <span class="key">"hard_limit"</span>: <span class="bool-f">null</span>,
+  <span class="key">"reset_at"</span>: <span class="num">1234567890000</span>
+}</div>
+                    <p><code>reset_at</code> is a Unix timestamp in milliseconds. <code>hard_limit</code> is <code>null</code> if no hard cap has been set.</p>
+                    <div class="callout callout-info">Note: <code>hard_limit</code> is only applicable to paid tiers using native keys (which don't currently exist).</br>The endpoint to alter <code>hard_limit</code> does exist but is not publicly documented.</div>
+                </div>
+
+            </section>
+
+            <!-- Error Reference -->
+            <section class="docs-section" id="errors" data-aos="fade-left">
+                <p class="section-label">Reference</p>
+                <h2>Error reference</h2>
+                <p>All errors return a <strong>plain text body</strong> with an appropriate HTTP status code. Handle them using <code>res.text()</code>.</p>
+                
+                <!-- Added table-responsive -->
+                <div class="table-responsive">
+                    <table class="error-table">
+                        <thead>
+                            <tr><th>Message</th><th>Status</th><th>Meaning</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Missing Authorization Header</td><td><span class="status-pill status-401">401</span></td><td>No Authorization header present</td></tr>
+                            <tr><td>Invalid Authorization Header</td><td><span class="status-pill status-401">401</span></td><td>Header is not in Bearer format</td></tr>
+                            <tr><td>Invalid API Key</td><td><span class="status-pill status-401">401</span></td><td>Key does not have a valid <code>bsn_live_</code> prefix</td></tr>
+                            <tr><td>API Key Does Not Exist</td><td><span class="status-pill status-401">401</span></td><td>Prefix is valid but the key is not registered</td></tr>
+                            <tr><td>Invalid Email</td><td><span class="status-pill status-400">400</span></td><td>Email address failed validation</td></tr>
+                            <tr><td>Email Already Exists</td><td><span class="status-pill status-400">400</span></td><td>Email is already registered</td></tr>
+                            <tr><td>Invalid Regeneration Token</td><td><span class="status-pill status-401">401</span></td><td>Regeneration token does not match</td></tr>
+                            <tr><td>Rate Limit Exceeded</td><td><span class="status-pill status-429">429</span></td><td>Daily request limit reached</td></tr>
+                            <tr><td>Invalid JSON Body</td><td><span class="status-pill status-400">400</span></td><td>Request body is missing or malformed</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Code Examples -->
+            <section class="docs-section" id="examples" data-aos="fade-left">
+                <p class="section-label">Reference</p>
+                <h2>Code examples</h2>
+
+                <h3>Evaluate a password</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab(this, 'ex-eval-js')">JavaScript</button>
+                    <button class="code-tab" onclick="switchTab(this, 'ex-eval-curl')">cURL</button>
+                </div>
+                <div id="ex-eval-js" class="code-panel active">
+                    <div class="code-block"><span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"https://bastion.eande171.workers.dev/v1/evaluate"</span>, {
+  method: <span class="str">"POST"</span>,
+  headers: {
+    <span class="str">"Authorization"</span>: <span class="str">"Bearer bsn_live_..."</span>,
+    <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>
+  },
+  body: <span class="fn">JSON.stringify</span>({ password: <span class="str">"correct-horse-battery-staple"</span> })
+});
+
+<span class="kw">if</span> (!res.ok) {
+  <span class="kw">const</span> err = <span class="kw">await</span> res.<span class="fn">text</span>();
+  <span class="fn">console.error</span>(<span class="str">"Error:"</span>, err);
+} <span class="kw">else</span> {
+  <span class="kw">const</span> result = <span class="kw">await</span> res.<span class="fn">json</span>();
+  <span class="fn">console.log</span>(result);
+}</div>
+                </div>
+                <div id="ex-eval-curl" class="code-panel">
+                    <div class="code-block">curl -X POST https://bastion.eande171.workers.dev/v1/evaluate \
+  -H <span class="str">"Authorization: Bearer bsn_live_..."</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"password": "correct-horse-battery-staple"}'</span></div>
+                </div>
+
+                <h3>Skip the breach check</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab(this, 'ex-hibp-js')">JavaScript</button>
+                    <button class="code-tab" onclick="switchTab(this, 'ex-hibp-curl')">cURL</button>
+                </div>
+                <div id="ex-hibp-js" class="code-panel active">
+                    <div class="code-block"><span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"https://bastion.eande171.workers.dev/v1/evaluate?hibp=false"</span>, {
+  method: <span class="str">"POST"</span>,
+  headers: {
+    <span class="str">"Authorization"</span>: <span class="str">"Bearer bsn_live_..."</span>,
+    <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>
+  },
+  body: <span class="fn">JSON.stringify</span>({ password: <span class="str">"correct-horse-battery-staple"</span> })
+});</div>
+                </div>
+                <div id="ex-hibp-curl" class="code-panel">
+                    <div class="code-block">curl -X POST <span class="str">"https://bastion.eande171.workers.dev/v1/evaluate?hibp=false"</span> \
+  -H <span class="str">"Authorization: Bearer bsn_live_..."</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"password": "correct-horse-battery-staple"}'</span></div>
+                </div>
+
+                <h3>Regenerate a key</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab(this, 'ex-regen-js')">JavaScript</button>
+                    <button class="code-tab" onclick="switchTab(this, 'ex-regen-curl')">cURL</button>
+                </div>
+                <div id="ex-regen-js" class="code-panel active">
+                    <div class="code-block"><span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"https://bastion.eande171.workers.dev/v1/keys/regenerate"</span>, {
+  method: <span class="str">"POST"</span>,
+  headers: { <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span> },
+  body: <span class="fn">JSON.stringify</span>({
+    email: <span class="str">"you@example.com"</span>,
+    regen_token: <span class="str">"bsn_regen_..."</span>
+  })
+});
+<span class="kw">const</span> { api_key, regen_token } = <span class="kw">await</span> res.<span class="fn">json</span>();</div>
+                </div>
+                <div id="ex-regen-curl" class="code-panel">
+                    <div class="code-block">curl -X POST https://bastion.eande171.workers.dev/v1/keys/regenerate \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{"email": "you@example.com", "regen_token": "bsn_regen_..."}'</span></div>
+                </div>
+
+                <h3>Check usage</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="switchTab(this, 'ex-usage-js')">JavaScript</button>
+                    <button class="code-tab" onclick="switchTab(this, 'ex-usage-curl')">cURL</button>
+                </div>
+                <div id="ex-usage-js" class="code-panel active">
+                    <div class="code-block"><span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"https://bastion.eande171.workers.dev/v1/keys/usage"</span>, {
+  headers: { <span class="str">"Authorization"</span>: <span class="str">"Bearer bsn_live_..."</span> }
+});
+<span class="kw">const</span> { tier, usage, limit, reset_at } = <span class="kw">await</span> res.<span class="fn">json</span>();
+<span class="fn">console.log</span>(<span class="str">`${usage} / ${limit} requests used`</span>);</div>
+                </div>
+                <div id="ex-usage-curl" class="code-panel">
+                    <div class="code-block">curl https://bastion.eande171.workers.dev/v1/keys/usage \
+  -H <span class="str">"Authorization: Bearer bsn_live_..."</span></div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <span>Bastion - built by <a href="https://github.com/eande171">Eden Anderson</a>. Licensed under GNU AGPL v3.</span>
+            <span>
+                <a href="https://github.com/eande171/bastion">GitHub</a>
+                &nbsp;·&nbsp;
+                <a href="../demo/index.html">Try it</a>
+                &nbsp;·&nbsp;
+                <a href="https://rapidapi.com/eande171-RQXKDUFxT/api/password-strength-and-breach-detection-api">RapidAPI</a>
+            </span>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function switchTab(btn, panelId) {
+        const tabGroup = btn.parentElement;
+        tabGroup.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        let sibling = tabGroup.nextElementSibling;
+        while (sibling && sibling.classList && sibling.classList.contains('code-panel')) {
+            sibling.classList.remove('active');
+            sibling = sibling.nextElementSibling;
+        }
+        document.getElementById(panelId).classList.add('active');
+    }
+
+    const sections = document.querySelectorAll('.docs-section, .endpoint-block[id]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${entry.target.id}`) link.classList.add('active');
+                });
+            }
+        });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    sections.forEach(s => { if (s.id) observer.observe(s); });
+</script>
+</body>
+</html>
