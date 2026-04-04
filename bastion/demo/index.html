@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     
+    <!-- PrismJS Theme (Tomorrow Night) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    
     <link rel="icon" type="image/svg+xml" href="../../projects/media/bastion.svg">
 
     <link rel="stylesheet" href="../bastion.css">
@@ -25,6 +28,7 @@
 
         /* Input */
         .input-wrap { position: relative; margin-bottom: 1rem; }
+        .input-wrap.mb-2 { margin-bottom: 0.5rem; }
         .bstn-input {
             width: 100%;
             background: rgba(19, 28, 43, 0.8);
@@ -34,7 +38,7 @@
             font-size: 0.9rem;
             padding: 0.8rem 3.5rem 0.8rem 1rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, opacity 0.2s;
             border-radius: 0;
         }
         .bstn-input:focus { border-color: var(--orange); }
@@ -121,11 +125,11 @@
         .score-label { font-size: 1rem; color: var(--white); }
         .score-sub { font-size: 0.78rem; color: rgba(232, 241, 242, 0.5); margin-top: 0.2rem; }
 
-        .strength-track { height: 3px; background: rgba(68, 103, 156, 0.25); margin-bottom: 1.5rem; }
-        .strength-fill { height: 3px; transition: width 0.5s ease, background 0.5s ease; }
+        .strength-track { height: 3px; background: rgba(68, 103, 156, 0.25); margin-bottom: 1.5rem; border-radius: 2px; }
+        .strength-fill { height: 3px; transition: width 0.3s ease, background 0.3s ease; border-radius: 2px; }
 
         .field-item {
-            padding: 0.75rem;
+            padding: 1.25rem;
             background: rgba(19, 28, 43, 0.6);
             border: 1px solid rgba(68, 103, 156, 0.2);
             height: 100%;
@@ -151,6 +155,90 @@
 
         .error-banner { padding: 0.75rem 1rem; background: rgba(220, 80, 60, 0.12); border-left: 3px solid #dc503c; font-size: 0.84rem; color: rgba(232, 241, 242, 0.88); }
 
+        /* Code Snippets Section */
+        .code-tabs { display: flex; gap: 1.5rem; }
+        .code-tab {
+            background: transparent; border: none; border-bottom: 2px solid transparent;
+            color: rgba(232, 241, 242, 0.45); cursor: pointer; padding: 0.5rem 0.25rem;
+            font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 500; transition: all 0.2s;
+        }
+        .code-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+        .code-tab:hover:not(.active) { color: var(--white); }
+
+        /* Provider Toggle Switch */
+        .provider-toggle {
+            display: inline-flex; background: rgba(19, 28, 43, 0.8); border: 1px solid rgba(68, 103, 156, 0.3); border-radius: 4px; overflow: hidden;
+        }
+        .provider-btn {
+            background: transparent; border: none; color: rgba(232, 241, 242, 0.5); font-size: 0.75rem; font-family: 'Outfit', sans-serif; padding: 0.4rem 0.8rem; cursor: pointer; transition: all 0.2s;
+        }
+        .provider-btn:hover:not(.active) { color: var(--white); }
+        .provider-btn.active { background: rgba(68, 103, 156, 0.3); color: var(--white); font-weight: 600; }
+
+        .form-panel { display: none; }
+        .form-panel.active { display: block; }
+
+        /* Usage text underneath templates */
+        .template-usage-notice {
+            font-size: 0.72rem; color: rgba(232, 241, 242, 0.45); text-align: right; margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace;
+        }
+        .usage-dot {
+            display: inline-block; width: 6px; height: 6px; background: #64b478; border-radius: 50%; margin-right: 5px; box-shadow: 0 0 6px rgba(100, 180, 120, 0.6); animation: pulse 2s infinite; vertical-align: middle;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        .code-wrapper { position: relative; height: 100%; display: flex; flex-direction: column; }
+        
+        /* Inner HTML/JS/CSS tabs */
+        .lang-tabs {
+            display: flex; gap: 0; background: rgba(19, 28, 43, 0.9);
+            border: 1px solid rgba(68, 103, 156, 0.25); border-bottom: none;
+            border-radius: 4px 4px 0 0; padding: 0.5rem 1rem 0; align-items: flex-end;
+            position: relative; z-index: 2;
+        }
+        .lang-tab {
+            background: transparent; border: none; padding: 0.4rem 1rem;
+            color: rgba(232, 241, 242, 0.45); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+            cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+            transition: color 0.2s;
+        }
+        .lang-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+        .lang-tab:hover:not(.active) { color: var(--white); }
+        
+        /* Prism Overrides */
+        .code-tab-pane { display: none; flex-direction: column; flex-grow: 1; }
+        .code-tab-pane.active { display: flex; }
+        
+        pre[class*="language-"] {
+            background: rgba(19, 28, 43, 0.9) !important;
+            border: 1px solid rgba(68, 103, 156, 0.25) !important;
+            padding: 1.25rem 1.5rem !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            font-size: 0.78rem !important;
+            line-height: 1.8 !important;
+            border-radius: 0 0 4px 4px !important;
+            margin: 0 !important;
+            text-shadow: none !important;
+            flex-grow: 1;
+            overflow-x: auto;
+        }
+        code[class*="language-"], pre[class*="language-"] span {
+            padding-left: 0 !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            text-shadow: none !important;
+        }
+
+        .btn-copy {
+            position: absolute; right: 0.75rem; top: 0.4rem;
+            background: transparent; border: 1px solid rgba(68, 103, 156, 0.35);
+            color: rgba(232, 241, 242, 0.6); font-family: 'Outfit', sans-serif; font-size: 0.75rem;
+            padding: 0.15rem 0.6rem; cursor: pointer; transition: all 0.2s; border-radius: 4px;
+        }
+        .btn-copy:hover { color: var(--orange); border-color: var(--orange); background: rgba(19, 28, 43, 1); }
+
+        .form-label-custom { display: block; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232, 241, 242, 0.5); margin-bottom: 0.4rem; }
+        .snippet-breach-warn { font-size: 0.78rem; color: #dc503c; background: rgba(220, 80, 60, 0.1); padding: 0.6rem; border-left: 2px solid #dc503c; margin-top: 0.5rem; display: none; }
+
         /* Register */
         .register-text h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; line-height: 1.3; }
         .register-text h2 span { color: var(--orange); }
@@ -162,16 +250,9 @@
         .tier-name { font-weight: 600; color: var(--white); }
         .tier-detail { color: rgba(232, 241, 242, 0.55); }
 
-        .form-label-custom { display: block; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232, 241, 242, 0.5); margin-bottom: 0.4rem; }
-
         .register-result {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(19, 28, 43, 0.8);
-            border: 1px solid rgba(68, 103, 156, 0.3);
-            font-size: 0.82rem;
-            line-height: 1.8;
-            display: none;
+            margin-top: 1rem; padding: 1rem; background: rgba(19, 28, 43, 0.8);
+            border: 1px solid rgba(68, 103, 156, 0.3); font-size: 0.82rem; line-height: 1.8; display: none;
         }
         .register-result.visible { display: block; }
         .rr-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232, 241, 242, 0.4); margin-bottom: 0.3rem; }
@@ -180,6 +261,8 @@
 
         .register-error { margin-top: 1rem; padding: 0.75rem 1rem; background: rgba(220, 80, 60, 0.1); border-left: 3px solid #dc503c; font-size: 0.84rem; color: rgba(232, 241, 242, 0.88); display: none; }
         .register-error.visible { display: block; }
+        
+        .section-divider { padding: 4rem 0; border-bottom: 1px solid rgba(68, 103, 156, 0.2); }
     </style>
 
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -225,7 +308,7 @@
 
                     <div class="input-wrap">
                         <input type="password" id="pw-input" class="bstn-input" placeholder="Enter a password..." autocomplete="off" />
-                        <button class="toggle-vis" id="toggle-vis" type="button">show</button>
+                        <button class="toggle-vis" type="button" aria-label="Toggle password visibility">show</button>
                     </div>
 
                     <div class="mb-3">
@@ -275,28 +358,28 @@
 
                         <div class="row g-2 mb-3">
                             <div class="col-6">
-                                <div class="field-item">
+                                <div class="field-item" style="padding: 0.75rem;">
                                     <div class="field-item-label">Online (throttled)</div>
                                     <div class="field-item-value" id="r-ct-throttled">-</div>
                                     <div class="field-item-desc">100 guesses/hr - typical login form</div>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="field-item">
+                                <div class="field-item" style="padding: 0.75rem;">
                                     <div class="field-item-label">Online (unthrottled)</div>
                                     <div class="field-item-value" id="r-ct-unthrottled">-</div>
                                     <div class="field-item-desc">10 guesses/sec - no rate limiting</div>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="field-item">
+                                <div class="field-item" style="padding: 0.75rem;">
                                     <div class="field-item-label">Offline (slow hash)</div>
                                     <div class="field-item-value" id="r-ct-slow">-</div>
                                     <div class="field-item-desc">bcrypt/scrypt - 10k guesses/sec</div>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="field-item">
+                                <div class="field-item" style="padding: 0.75rem;">
                                     <div class="field-item-label">Offline (fast hash)</div>
                                     <div class="field-item-value" id="r-ct-fast">-</div>
                                     <div class="field-item-desc">MD5/SHA-1 - 10B guesses/sec</div>
@@ -310,6 +393,858 @@
                     <div class="error-banner mt-2" id="result-error" style="display:none"></div>
                 </div>
 
+            </div>
+        </div>
+    </section>
+
+    <!-- UI Templates -->
+    <section id="snippets" class="section-divider">
+        <div class="container">
+            <div class="mb-4" data-aos="fade-up">
+                <p class="section-label">UI Templates</p>
+                <h2 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">Drop-in integration snippets.</h2>
+                <p style="color: rgba(232, 241, 242, 0.82); font-size: 0.92rem;">
+                    Ready-to-use HTML and JavaScript logic for common authentication forms. <strong>Try typing in the forms below to see the logic in action</strong>, then grab the code to use in your own projects.
+                </p>
+            </div>
+
+            <!-- Tab and Provider Header -->
+            <div class="d-flex flex-wrap justify-content-between align-items-end mb-4 border-bottom pb-2" style="border-color: rgba(68, 103, 156, 0.2) !important;">
+                <div class="code-tabs pb-0" data-aos="fade-up">
+                    <button class="code-tab active" onclick="switchFormTab(this, 'snippet-register')">Registration Form</button>
+                    <button class="code-tab" onclick="switchFormTab(this, 'snippet-login')">Login Form</button>
+                    <button class="code-tab" onclick="switchFormTab(this, 'snippet-password')">Change Password</button>
+                </div>
+                <div class="provider-toggle mt-3 mt-md-0" data-aos="fade-up" data-aos-delay="100">
+                    <button class="provider-btn active" onclick="setProvider(this, 'native')">Native API</button>
+                    <button class="provider-btn" onclick="setProvider(this, 'rapidapi')">RapidAPI</button>
+                </div>
+            </div>
+
+            <!-- Registration Snippet -->
+            <div id="snippet-register" class="form-panel active">
+                <div class="row g-4">
+                    <div class="col-12 col-lg-4" data-aos="fade-right">
+                        <form id="demo-reg-form" class="field-item"> 
+                            <label class="form-label-custom" for="demo-reg-email">Email Address</label>
+                            <input type="email" id="demo-reg-email" name="email" class="bstn-input mb-3" placeholder="user@example.com" autocomplete="email" required>
+                            
+                            <div class="d-flex justify-content-between align-items-end mb-1">
+                                <label class="form-label-custom mb-0" for="demo-reg-pwd">Password</label>
+                                <span id="demo-reg-str-text" aria-live="polite" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; transition: color 0.2s;"></span>
+                            </div>
+                            <div class="input-wrap mb-2">
+                                <input type="password" id="demo-reg-pwd" name="password" class="bstn-input" placeholder="••••••••" autocomplete="new-password" required>
+                                <button type="button" class="toggle-vis" aria-label="Toggle password visibility">show</button>
+                            </div>
+                            
+                            <div class="strength-track mb-3">
+                                <div id="demo-reg-str-bar" class="strength-fill"></div>
+                            </div>
+
+                            <div id="demo-reg-breach" class="snippet-breach-warn mb-3" aria-live="polite"></div>
+                            
+                            <button type="submit" class="bstn-btn bstn-btn-primary mt-2">Create Account</button>
+                        </form>
+                        <div class="template-usage-notice"><span class="usage-dot"></span>Live demo API usage: <strong class="shared-usage-text">- / -</strong></div>
+                    </div>
+                    <div class="col-12 col-lg-8" data-aos="fade-left">
+                        <div class="code-wrapper">
+                            <div class="lang-tabs">
+                                <button class="lang-tab active" onclick="switchLang(this, 'reg-html')">HTML</button>
+                                <button class="lang-tab" onclick="switchLang(this, 'reg-css')">CSS</button>
+                                <button class="lang-tab" onclick="switchLang(this, 'reg-js')">JavaScript</button>
+                                <button class="btn-copy" onclick="copySnippet(this)">Copy</button>
+                            </div>
+                            
+                            <!-- Reg HTML -->
+                            <div id="reg-html" class="code-tab-pane active">
+<pre class="code-block"><code class="language-html">
+&lt;form id="reg-form"&gt;
+  &lt;label for="reg-email"&gt;Email Address&lt;/label&gt;
+  &lt;input type="email" id="reg-email" name="email" autocomplete="email" required&gt;
+  
+  &lt;div style="display: flex; justify-content: space-between;"&gt;
+    &lt;label for="reg-pwd"&gt;Password&lt;/label&gt;
+    &lt;span id="reg-str-text" aria-live="polite"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  
+  &lt;!-- Input Wrap for toggle visibility --&gt;
+  &lt;div class="input-wrap"&gt;
+    &lt;input type="password" id="reg-pwd" name="password" autocomplete="new-password" required&gt;
+    &lt;button type="button" class="toggle-vis"&gt;show&lt;/button&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="strength-track"&gt;
+    &lt;div id="reg-str-bar" class="strength-fill"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  &lt;div id="reg-breach" class="breach-warn" style="display: none;" aria-live="assertive"&gt;&lt;/div&gt;
+  
+  &lt;button type="submit" id="reg-btn"&gt;Create Account&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+                            </div>
+
+                            <!-- Reg CSS -->
+                            <div id="reg-css" class="code-tab-pane">
+<pre class="code-block"><code class="language-css">
+/* Password Toggle Layout */
+.input-wrap {
+  position: relative;
+  display: block;
+}
+
+.input-wrap input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 3.5rem; /* Space for the show button */
+}
+
+.toggle-vis {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+}
+
+.toggle-vis:hover {
+  color: #333;
+}
+
+/* Strength Bar */
+.strength-track {
+  height: 4px;
+  background-color: rgba(100, 100, 100, 0.2);
+  border-radius: 2px;
+  margin-bottom: 12px;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  background-color: transparent;
+  border-radius: 2px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* Breach Alert */
+.breach-warn {
+  color: #dc503c;
+  background-color: rgba(220, 80, 60, 0.1);
+  padding: 10px 12px;
+  border-left: 3px solid #dc503c;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+}</code></pre>
+                            </div>
+
+                            <!-- Reg JS -->
+                            <div id="reg-js" class="code-tab-pane">
+<pre class="code-block fetch-native"><code class="language-javascript">
+// Show/Hide Toggle Logic
+document.querySelectorAll('.toggle-vis').forEach(btn =&gt; {
+  btn.addEventListener('click', (e) =&gt; {
+    const input = e.target.previousElementSibling;
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    e.target.textContent = isHidden ? 'hide' : 'show';
+  });
+});
+
+// Password Evaluation Logic
+const pwdInput = document.getElementById('reg-pwd');
+const strText = document.getElementById('reg-str-text');
+const strBar = document.getElementById('reg-str-bar');
+const breachWarn = document.getElementById('reg-breach');
+
+const colors = ['#dc503c', '#e0763a', '#e8a838', '#8bbf6e', '#4caf7d'];
+let debounceTimer;
+
+pwdInput.addEventListener('input', (e) =&gt; {
+  clearTimeout(debounceTimer);
+  const password = e.target.value;
+  
+  if (!password) {
+    strText.textContent = ''; strBar.style.width = '0%'; breachWarn.style.display = 'none';
+    pwdInput.style.borderColor = ''; pwdInput.style.opacity = '1';
+    return;
+  }
+
+  // Set UI to loading state
+  strText.textContent = 'Checking...';
+  strText.style.color = '#888';
+  pwdInput.style.opacity = '0.7';
+
+  // Wait 500ms after user stops typing before calling API
+  debounceTimer = setTimeout(async () =&gt; {
+    try {
+      const res = await fetch('https://bastion.eande171.workers.dev/v1/evaluate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // SECURITY WARNING: Route this via your backend proxy to hide your API key
+          'Authorization': 'Bearer YOUR_API_KEY'
+        },
+        body: JSON.stringify({ password })
+      });
+      
+      const data = await res.json();
+      
+      // Ensure the user hasn't cleared the input while waiting for the response
+      if (pwdInput.value !== password) return; 
+
+      pwdInput.style.opacity = '1';
+      
+      // Update Strength UI
+      strText.textContent = data.strength;
+      strText.style.color = colors[data.score];
+      strBar.style.width = `${(data.score / 4) * 100}%`;
+      strBar.style.backgroundColor = colors[data.score];
+      pwdInput.style.borderColor = colors[data.score];
+      
+      // Update Breach UI
+      if (data.breached) {
+        breachWarn.style.display = 'block';
+        breachWarn.innerHTML = `⚠ Password found in ${data.breach_count} data breaches.`;
+      } else {
+        breachWarn.style.display = 'none';
+      }
+    } catch (err) {
+      pwdInput.style.opacity = '1';
+      console.error("Evaluation failed", err);
+    }
+  }, 500);
+});</code></pre>
+
+<pre class="code-block fetch-rapidapi" style="display:none;"><code class="language-javascript">
+// Show/Hide Toggle Logic
+document.querySelectorAll('.toggle-vis').forEach(btn =&gt; {
+  btn.addEventListener('click', (e) =&gt; {
+    const input = e.target.previousElementSibling;
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    e.target.textContent = isHidden ? 'hide' : 'show';
+  });
+});
+
+// Password Evaluation Logic
+const pwdInput = document.getElementById('reg-pwd');
+const strText = document.getElementById('reg-str-text');
+const strBar = document.getElementById('reg-str-bar');
+const breachWarn = document.getElementById('reg-breach');
+
+const colors = ['#dc503c', '#e0763a', '#e8a838', '#8bbf6e', '#4caf7d'];
+let debounceTimer;
+
+pwdInput.addEventListener('input', (e) =&gt; {
+  clearTimeout(debounceTimer);
+  const password = e.target.value;
+  
+  if (!password) {
+    strText.textContent = ''; strBar.style.width = '0%'; breachWarn.style.display = 'none';
+    pwdInput.style.borderColor = ''; pwdInput.style.opacity = '1';
+    return;
+  }
+
+  // Set UI to loading state
+  strText.textContent = 'Checking...';
+  strText.style.color = '#888';
+  pwdInput.style.opacity = '0.7';
+
+  // Wait 500ms after user stops typing before calling API
+  debounceTimer = setTimeout(async () =&gt; {
+    try {
+      const res = await fetch('https://password-strength-and-breach-detection-api.p.rapidapi.com/v1/evaluate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // SECURITY WARNING: Route this via your backend proxy to hide your API key
+          'x-rapidapi-host': 'password-strength-and-breach-detection-api.p.rapidapi.com',
+          'x-rapidapi-key': 'YOUR_RAPIDAPI_KEY'
+        },
+        body: JSON.stringify({ password })
+      });
+      
+      const data = await res.json();
+      
+      // Ensure the user hasn't cleared the input while waiting for the response
+      if (pwdInput.value !== password) return; 
+
+      pwdInput.style.opacity = '1';
+      
+      // Update Strength UI
+      strText.textContent = data.strength;
+      strText.style.color = colors[data.score];
+      strBar.style.width = `${(data.score / 4) * 100}%`;
+      strBar.style.backgroundColor = colors[data.score];
+      pwdInput.style.borderColor = colors[data.score];
+      
+      // Update Breach UI
+      if (data.breached) {
+        breachWarn.style.display = 'block';
+        breachWarn.innerHTML = `⚠ Password found in ${data.breach_count} data breaches.`;
+      } else {
+        breachWarn.style.display = 'none';
+      }
+    } catch (err) {
+      pwdInput.style.opacity = '1';
+      console.error("Evaluation failed", err);
+    }
+  }, 500);
+});</code></pre>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Snippet -->
+            <div id="snippet-login" class="form-panel">
+                <div class="row g-4">
+                    <div class="col-12 col-lg-4">
+                        <div class="field-item">
+                            <form id="demo-login-form">
+                                <label class="form-label-custom" for="demo-login-email">Email Address</label>
+                                <input type="email" id="demo-login-email" name="email" class="bstn-input mb-3" placeholder="user@example.com" autocomplete="email" required>
+                                
+                                <div class="d-flex justify-content-between align-items-end mb-1">
+                                    <label class="form-label-custom mb-0" for="demo-login-pwd">Password</label>
+                                    <a href="#snippets" style="font-size: 0.75rem; text-decoration: none;">Forgot?</a>
+                                </div>
+                                <div class="input-wrap mb-2">
+                                    <input type="password" id="demo-login-pwd" name="password" class="bstn-input" placeholder="••••••••" autocomplete="current-password" required>
+                                    <button type="button" class="toggle-vis" aria-label="Toggle password visibility">show</button>
+                                </div>
+                                
+                                <div id="demo-login-alert" class="snippet-breach-warn mb-3" aria-live="assertive" style="display: none;"></div>
+
+                                <button type="submit" id="demo-login-btn" class="bstn-btn bstn-btn-primary mt-2">Sign In</button>
+                            </form>
+                        </div>
+                        <div class="template-usage-notice"><span class="usage-dot"></span>Live demo API usage: <strong class="shared-usage-text">- / -</strong></div>
+                    </div>
+                    <div class="col-12 col-lg-8">
+                        <div class="code-wrapper">
+                            <div class="lang-tabs">
+                                <button class="lang-tab active" onclick="switchLang(this, 'login-html')">HTML</button>
+                                <button class="lang-tab" onclick="switchLang(this, 'login-css')">CSS</button>
+                                <button class="lang-tab" onclick="switchLang(this, 'login-js')">JavaScript</button>
+                                <button class="btn-copy" onclick="copySnippet(this)">Copy</button>
+                            </div>
+                            
+                            <!-- Login HTML -->
+                            <div id="login-html" class="code-tab-pane active">
+<pre class="code-block"><code class="language-html">&lt;form id="login-form"&gt;
+  &lt;label for="login-email"&gt;Email Address&lt;/label&gt;
+  &lt;input type="email" id="login-email" name="email" autocomplete="email" required&gt;
+
+  &lt;div style="display: flex; justify-content: space-between;"&gt;
+    &lt;label for="login-pwd"&gt;Password&lt;/label&gt;
+    &lt;a href="#" style="font-size: 0.8rem;"&gt;Forgot?&lt;/a&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Input Wrap for toggle visibility --&gt;
+  &lt;div class="input-wrap"&gt;
+    &lt;input type="password" id="login-pwd" name="password" autocomplete="current-password" required&gt;
+    &lt;button type="button" class="toggle-vis"&gt;show&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div id="login-alert" class="breach-warn" style="display: none;" aria-live="assertive"&gt;&lt;/div&gt;
+
+  &lt;button type="submit" id="login-btn"&gt;Sign In&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+                            </div>
+
+                            <!-- Login CSS -->
+                            <div id="login-css" class="code-tab-pane">
+<pre class="code-block"><code class="language-css">
+/* Password Toggle Layout */
+.input-wrap {
+  position: relative;
+  display: block;
+}
+
+.input-wrap input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 3.5rem; /* Space for the show button */
+}
+
+.toggle-vis {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+}
+
+.toggle-vis:hover {
+  color: #333;
+}
+
+/* Breach Alert */
+.breach-warn {
+  color: #dc503c;
+  background-color: rgba(220, 80, 60, 0.1);
+  padding: 10px 12px;
+  border-left: 3px solid #dc503c;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+}</code></pre>
+                            </div>
+
+                            <!-- Login JS -->
+                            <div id="login-js" class="code-tab-pane">
+<pre class="code-block fetch-native"><code class="language-javascript">
+// Show/Hide Toggle Logic
+document.querySelectorAll('.toggle-vis').forEach(btn =&gt; {
+  btn.addEventListener('click', (e) =&gt; {
+    const input = e.target.previousElementSibling;
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    e.target.textContent = isHidden ? 'hide' : 'show';
+  });
+});
+
+// Login Check Logic
+const loginForm = document.getElementById('login-form');
+const pwdInput = document.getElementById('login-pwd');
+const alertBox = document.getElementById('login-alert');
+const submitBtn = document.getElementById('login-btn');
+
+loginForm.addEventListener('submit', async (e) =&gt; {
+  e.preventDefault();
+  const password = pwdInput.value;
+  if (!password) return;
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Checking...';
+  pwdInput.style.opacity = '0.7';
+  alertBox.style.display = 'none';
+
+  try {
+    const res = await fetch('https://bastion.eande171.workers.dev/v1/evaluate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // SECURITY WARNING: Route this via your backend proxy to hide your API key
+        'Authorization': 'Bearer YOUR_API_KEY'
+      },
+      body: JSON.stringify({ password })
+    });
+    
+    const data = await res.json();
+    
+    // Intercept login if password is compromised
+    if (data.breached) {
+      alertBox.style.display = 'block';
+      alertBox.textContent = `⚠ Action Required: This password was compromised in a data breach. You must reset it before proceeding.`;
+    } else {
+      // Password is safe, proceed with standard auth
+      alertBox.style.display = 'none';
+      console.log("Safe, submitting to backend...");
+      // loginForm.submit();
+    }
+  } catch (err) {
+    console.error("Evaluation failed", err);
+  } finally {
+    pwdInput.style.opacity = '1';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Sign In';
+  }
+});</code></pre>
+
+<pre class="code-block fetch-rapidapi" style="display:none;"><code class="language-javascript">
+// Show/Hide Toggle Logic
+document.querySelectorAll('.toggle-vis').forEach(btn =&gt; {
+  btn.addEventListener('click', (e) =&gt; {
+    const input = e.target.previousElementSibling;
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    e.target.textContent = isHidden ? 'hide' : 'show';
+  });
+});
+
+// Login Check Logic
+const loginForm = document.getElementById('login-form');
+const pwdInput = document.getElementById('login-pwd');
+const alertBox = document.getElementById('login-alert');
+const submitBtn = document.getElementById('login-btn');
+
+loginForm.addEventListener('submit', async (e) =&gt; {
+  e.preventDefault();
+  const password = pwdInput.value;
+  if (!password) return;
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Checking...';
+  pwdInput.style.opacity = '0.7';
+  alertBox.style.display = 'none';
+
+  try {
+    const res = await fetch('https://password-strength-and-breach-detection-api.p.rapidapi.com/v1/evaluate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // SECURITY WARNING: Route this via your backend proxy to hide your API key
+        'x-rapidapi-host': 'password-strength-and-breach-detection-api.p.rapidapi.com',
+        'x-rapidapi-key': 'YOUR_RAPIDAPI_KEY'
+      },
+      body: JSON.stringify({ password })
+    });
+    
+    const data = await res.json();
+    
+    // Intercept login if password is compromised
+    if (data.breached) {
+      alertBox.style.display = 'block';
+      alertBox.textContent = `⚠ Action Required: This password was compromised in a data breach. You must reset it before proceeding.`;
+    } else {
+      // Password is safe, proceed with standard auth
+      alertBox.style.display = 'none';
+      console.log("Safe, submitting to backend...");
+      // loginForm.submit();
+    }
+  } catch (err) {
+    console.error("Evaluation failed", err);
+  } finally {
+    pwdInput.style.opacity = '1';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Sign In';
+  }
+});</code></pre>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Password Snippet -->
+            <div id="snippet-password" class="form-panel">
+                <div class="row g-4">
+                    <div class="col-12 col-lg-4">
+                        <form id="demo-cp-form" class="field-item">
+                            <label class="form-label-custom" for="demo-cp-current">Current Password</label>
+                            <div class="input-wrap mb-3">
+                                <input type="password" id="demo-cp-current" name="current-password" class="bstn-input" placeholder="••••••••" autocomplete="current-password" required>
+                                <button type="button" class="toggle-vis" aria-label="Toggle password visibility">show</button>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-end mb-1">
+                                <label class="form-label-custom mb-0" for="demo-cp-new">New Password</label>
+                                <span id="demo-cp-str-text" aria-live="polite" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; transition: color 0.2s;"></span>
+                            </div>
+                            <div class="input-wrap mb-2">
+                                <input type="password" id="demo-cp-new" name="new-password" class="bstn-input" placeholder="••••••••" autocomplete="new-password" required>
+                                <button type="button" class="toggle-vis" aria-label="Toggle password visibility">show</button>
+                            </div>
+                            
+                            <div class="strength-track mb-3">
+                                <div id="demo-cp-str-bar" class="strength-fill"></div>
+                            </div>
+
+                            <div id="demo-cp-breach" class="snippet-breach-warn mb-3" aria-live="assertive"></div>
+
+                            <label class="form-label-custom mt-2" for="demo-cp-confirm">Confirm Password</label>
+                            <div class="input-wrap mb-2">
+                                <input type="password" id="demo-cp-confirm" name="confirm-password" class="bstn-input" placeholder="••••••••" autocomplete="new-password" required>
+                                <button type="button" class="toggle-vis" aria-label="Toggle password visibility">show</button>
+                            </div>
+                            <div id="demo-cp-match" aria-live="polite" style="font-size: 0.75rem; color: #dc503c; display: none; margin-bottom: 1rem;">Passwords do not match</div>
+
+                            <button type="submit" class="bstn-btn bstn-btn-primary mt-2">Update Password</button>
+                        </form>
+                        <div class="template-usage-notice"><span class="usage-dot"></span>Live demo API usage: <strong class="shared-usage-text">- / -</strong></div>
+                    </div>
+                    <div class="col-12 col-lg-8">
+                        <div class="code-wrapper">
+                            <div class="lang-tabs">
+                                <button class="lang-tab active" onclick="switchLang(this, 'cp-html')">HTML</button>
+                                <button class="lang-tab" onclick="switchLang(this, 'cp-css')">CSS</button>
+                                <button class="lang-tab" onclick="switchLang(this, 'cp-js')">JavaScript</button>
+                                <button class="btn-copy" onclick="copySnippet(this)">Copy</button>
+                            </div>
+
+                            <!-- CP HTML -->
+                            <div id="cp-html" class="code-tab-pane active">
+<pre class="code-block"><code class="language-html">&lt;form id="change-password-form"&gt;
+  &lt;label for="cp-current"&gt;Current Password&lt;/label&gt;
+  &lt;div class="input-wrap"&gt;
+    &lt;input type="password" id="cp-current" name="current-password" autocomplete="current-password" required&gt;
+    &lt;button type="button" class="toggle-vis"&gt;show&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div style="display: flex; justify-content: space-between;"&gt;
+    &lt;label for="cp-new"&gt;New Password&lt;/label&gt;
+    &lt;span id="cp-str-text" aria-live="polite"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="input-wrap"&gt;
+    &lt;input type="password" id="cp-new" name="new-password" autocomplete="new-password" required&gt;
+    &lt;button type="button" class="toggle-vis"&gt;show&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class="strength-track"&gt;
+    &lt;div id="cp-str-bar" class="strength-fill"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div id="cp-breach" class="breach-warn" style="display: none;" aria-live="assertive"&gt;&lt;/div&gt;
+
+  &lt;label for="cp-confirm"&gt;Confirm New Password&lt;/label&gt;
+  &lt;div class="input-wrap"&gt;
+    &lt;input type="password" id="cp-confirm" name="confirm-password" autocomplete="new-password" required&gt;
+    &lt;button type="button" class="toggle-vis"&gt;show&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div id="cp-match" style="display: none; color: red;" aria-live="polite"&gt;Passwords do not match&lt;/div&gt;
+
+  &lt;button type="submit" id="cp-btn"&gt;Update Password&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+                            </div>
+
+                            <!-- CP CSS -->
+                            <div id="cp-css" class="code-tab-pane">
+<pre class="code-block"><code class="language-css">
+/* Password Toggle Layout */
+.input-wrap {
+  position: relative;
+  display: block;
+}
+
+.input-wrap input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 3.5rem; /* Space for the show button */
+}
+
+.toggle-vis {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+}
+
+.toggle-vis:hover {
+  color: #333;
+}
+
+/* Strength Bar */
+.strength-track {
+  height: 4px;
+  background-color: rgba(100, 100, 100, 0.2);
+  border-radius: 2px;
+  margin-bottom: 12px;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  background-color: transparent;
+  border-radius: 2px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* Breach Alert */
+.breach-warn {
+  color: #dc503c;
+  background-color: rgba(220, 80, 60, 0.1);
+  padding: 10px 12px;
+  border-left: 3px solid #dc503c;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+}</code></pre>
+                            </div>
+
+                            <!-- CP JS -->
+                            <div id="cp-js" class="code-tab-pane">
+<pre class="code-block fetch-native"><code class="language-javascript">
+// Show/Hide Toggle Logic
+document.querySelectorAll('.toggle-vis').forEach(btn =&gt; {
+  btn.addEventListener('click', (e) =&gt; {
+    const input = e.target.previousElementSibling;
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    e.target.textContent = isHidden ? 'hide' : 'show';
+  });
+});
+
+// Update Password Check Logic
+const newPwd = document.getElementById('cp-new');
+const confPwd = document.getElementById('cp-confirm');
+const matchErr = document.getElementById('cp-match');
+const strText = document.getElementById('cp-str-text');
+const strBar = document.getElementById('cp-str-bar');
+const breachWarn = document.getElementById('cp-breach');
+
+const colors = ['#dc503c', '#e0763a', '#e8a838', '#8bbf6e', '#4caf7d'];
+let debounceTimer;
+
+// Match checker helper
+const checkMatch = () =&gt; {
+  if (confPwd.value &amp;&amp; newPwd.value !== confPwd.value) {
+    matchErr.style.display = 'block';
+    confPwd.style.borderColor = '#dc503c';
+  } else {
+    matchErr.style.display = 'none';
+    confPwd.style.borderColor = '';
+  }
+};
+confPwd.addEventListener('input', checkMatch);
+
+newPwd.addEventListener('input', (e) =&gt; {
+  clearTimeout(debounceTimer);
+  checkMatch();
+  const password = e.target.value;
+  
+  if (!password) {
+    strText.textContent = ''; strBar.style.width = '0%'; breachWarn.style.display = 'none';
+    newPwd.style.borderColor = ''; newPwd.style.opacity = '1';
+    return;
+  }
+
+  // Set UI to loading state
+  strText.textContent = 'Checking...';
+  strText.style.color = '#888';
+  newPwd.style.opacity = '0.7';
+
+  debounceTimer = setTimeout(async () =&gt; {
+    try {
+      const res = await fetch('https://bastion.eande171.workers.dev/v1/evaluate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // SECURITY WARNING: Route this via your backend proxy to hide your API key
+            'Authorization': 'Bearer YOUR_API_KEY' 
+        },
+        body: JSON.stringify({ password })
+      });
+      const data = await res.json();
+      
+      // Ensure the user hasn't cleared the input while waiting for the response
+      if (newPwd.value !== password) return; 
+
+      newPwd.style.opacity = '1';
+      
+      strText.textContent = data.strength;
+      strText.style.color = colors[data.score];
+      strBar.style.width = `${(data.score / 4) * 100}%`;
+      strBar.style.backgroundColor = colors[data.score];
+      newPwd.style.borderColor = colors[data.score];
+      
+      if (data.breached) {
+        breachWarn.style.display = 'block';
+        breachWarn.innerHTML = `⚠ Cannot use breached password.`;
+      } else {
+        breachWarn.style.display = 'none';
+      }
+    } catch (err) { 
+      newPwd.style.opacity = '1';
+    }
+  }, 500);
+});</code></pre>
+
+<pre class="code-block fetch-rapidapi" style="display:none;"><code class="language-javascript">
+// Show/Hide Toggle Logic
+document.querySelectorAll('.toggle-vis').forEach(btn =&gt; {
+  btn.addEventListener('click', (e) =&gt; {
+    const input = e.target.previousElementSibling;
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    e.target.textContent = isHidden ? 'hide' : 'show';
+  });
+});
+
+// Update Password Check Logic
+const newPwd = document.getElementById('cp-new');
+const confPwd = document.getElementById('cp-confirm');
+const matchErr = document.getElementById('cp-match');
+const strText = document.getElementById('cp-str-text');
+const strBar = document.getElementById('cp-str-bar');
+const breachWarn = document.getElementById('cp-breach');
+
+const colors = ['#dc503c', '#e0763a', '#e8a838', '#8bbf6e', '#4caf7d'];
+let debounceTimer;
+
+// Match checker helper
+const checkMatch = () =&gt; {
+  if (confPwd.value &amp;&amp; newPwd.value !== confPwd.value) {
+    matchErr.style.display = 'block';
+    confPwd.style.borderColor = '#dc503c';
+  } else {
+    matchErr.style.display = 'none';
+    confPwd.style.borderColor = '';
+  }
+};
+confPwd.addEventListener('input', checkMatch);
+
+newPwd.addEventListener('input', (e) =&gt; {
+  clearTimeout(debounceTimer);
+  checkMatch();
+  const password = e.target.value;
+  
+  if (!password) {
+    strText.textContent = ''; strBar.style.width = '0%'; breachWarn.style.display = 'none';
+    newPwd.style.borderColor = ''; newPwd.style.opacity = '1';
+    return;
+  }
+
+  // Set UI to loading state
+  strText.textContent = 'Checking...';
+  strText.style.color = '#888';
+  newPwd.style.opacity = '0.7';
+
+  debounceTimer = setTimeout(async () =&gt; {
+    try {
+      const res = await fetch('https://password-strength-and-breach-detection-api.p.rapidapi.com/v1/evaluate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // SECURITY WARNING: Route this via your backend proxy to hide your API key
+          'x-rapidapi-host': 'password-strength-and-breach-detection-api.p.rapidapi.com',
+          'x-rapidapi-key': 'YOUR_RAPIDAPI_KEY'
+        },
+        body: JSON.stringify({ password })
+      });
+      const data = await res.json();
+      
+      // Ensure the user hasn't cleared the input while waiting for the response
+      if (newPwd.value !== password) return; 
+
+      newPwd.style.opacity = '1';
+      
+      strText.textContent = data.strength;
+      strText.style.color = colors[data.score];
+      strBar.style.width = `${(data.score / 4) * 100}%`;
+      strBar.style.backgroundColor = colors[data.score];
+      newPwd.style.borderColor = colors[data.score];
+      
+      if (data.breached) {
+        breachWarn.style.display = 'block';
+        breachWarn.innerHTML = `⚠ Cannot use breached password.`;
+      } else {
+        breachWarn.style.display = 'none';
+      }
+    } catch (err) { 
+      newPwd.style.opacity = '1';
+    }
+  }, 500);
+});</code></pre>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -379,19 +1314,37 @@
     </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const BASE = 'https://bastion.eande171.workers.dev';
 
-    // Toggle visibility
-    const pwInput = document.getElementById('pw-input');
-    document.getElementById('toggle-vis').addEventListener('click', function() {
-        const hidden = pwInput.type === 'password';
-        pwInput.type = hidden ? 'text' : 'password';
-        this.textContent = hidden ? 'hide' : 'show';
+    // ----------------------------------------------------------------------
+    // GLOBAL PASSWORD TOGGLE (Event Delegation)
+    // ----------------------------------------------------------------------
+    document.addEventListener('click', e => {
+        if (e.target.classList.contains('toggle-vis')) {
+            const input = e.target.closest('.input-wrap').querySelector('input');
+            const hidden = input.type === 'password';
+            input.type = hidden ? 'text' : 'password';
+            e.target.textContent = hidden ? 'hide' : 'show';
+        }
     });
 
-    // Evaluate
+    // ----------------------------------------------------------------------
+    // HTML ESCAPE UTILITY (To prevent XSS from API returns)
+    // ----------------------------------------------------------------------
+    function escapeHTML(str) {
+        return (str || '').replace(/[&<>'"]/g, tag => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[tag]));
+    }
+
+    // ----------------------------------------------------------------------
+    // MAIN DEMO TOOL
+    // ----------------------------------------------------------------------
+    const pwInput = document.getElementById('pw-input');
     document.getElementById('eval-btn').addEventListener('click', evaluate);
     pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') evaluate(); });
 
@@ -418,6 +1371,9 @@
                 showEvalError(msg);
                 return;
             }
+            
+            // Ensure input wasn't cleared while fetch was happening
+            if (pwInput.value !== password) return;
 
             renderResult(await res.json(), skipHibp);
             await fetchUsage();
@@ -461,11 +1417,11 @@
         let fbHtml = '';
         if (data.warning || (data.suggestions && data.suggestions.length)) {
             fbHtml = `<div class="feedback-block">`;
-            if (data.warning) fbHtml += `<div class="fb-label">Warning</div><div>${data.warning}</div>`;
+            if (data.warning) fbHtml += `<div class="fb-label">Warning</div><div>${escapeHTML(data.warning)}</div>`;
             if (data.suggestions && data.suggestions.length) {
                 fbHtml += data.warning ? `<div class="mt-2">` : ``;
                 fbHtml += `<div class="fb-label">Suggestions</div>`;
-                data.suggestions.forEach(s => { fbHtml += `<div>- ${s}</div>`; });
+                data.suggestions.forEach(s => { fbHtml += `<div>- ${escapeHTML(s)}</div>`; });
                 fbHtml += data.warning ? `</div>` : ``;
             }
             fbHtml += `</div>`;
@@ -479,10 +1435,17 @@
             if (!res.ok) return;
             const data = await res.json();
             const limit = 10; 
+            
+            // Update main tool bar
             const wrap = document.getElementById('usage-wrap');
             wrap.style.display = 'block';
             document.getElementById('usage-text').textContent = `${data.usage} / ${limit}`;
             document.getElementById('usage-fill').style.width = `${Math.min((data.usage / limit) * 100, 100)}%`;
+
+            // Update UI template shared indicators
+            document.querySelectorAll('.shared-usage-text').forEach(el => {
+                el.textContent = `${data.usage} / ${limit}`;
+            });
         } catch (_) {}
     }
 
@@ -493,7 +1456,169 @@
         document.getElementById('result-empty').style.display = 'none';
     }
 
-    // Register
+    // ----------------------------------------------------------------------
+    // UI TEMPLATES TABS & COPY
+    // ----------------------------------------------------------------------
+    function switchFormTab(btn, panelId) {
+        const tabGroup = btn.parentElement;
+        tabGroup.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const section = btn.closest('.container');
+        section.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(panelId).classList.add('active');
+    }
+
+    function switchLang(btn, blockId) {
+        const tabGroup = btn.parentElement;
+        tabGroup.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+
+        const wrapper = btn.closest('.code-wrapper');
+        wrapper.querySelectorAll('.code-tab-pane').forEach(b => b.classList.remove('active'));
+        document.getElementById(blockId).classList.add('active');
+    }
+
+    function setProvider(btn, prov) {
+        const group = btn.closest('.provider-toggle');
+        group.querySelectorAll('.provider-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (prov === 'native') {
+            document.querySelectorAll('.fetch-native').forEach(el => el.style.display = 'block');
+            document.querySelectorAll('.fetch-rapidapi').forEach(el => el.style.display = 'none');
+        } else {
+            document.querySelectorAll('.fetch-native').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.fetch-rapidapi').forEach(el => el.style.display = 'block');
+        }
+    }
+
+    function copySnippet(btn) {
+        const wrapper = btn.closest('.code-wrapper');
+        const activePane = wrapper.querySelector('.code-tab-pane.active');
+        
+        let activePre = activePane.querySelector('pre.code-block:not([style*="display: none"])');
+        if (!activePre) activePre = activePane.querySelector('pre.code-block');
+        
+        navigator.clipboard.writeText(activePre.textContent).then(() => {
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = originalText, 2000);
+        });
+    }
+
+    // ----------------------------------------------------------------------
+    // LIVE UI TEMPLATE LOGIC (Powers the rendered inline demo forms)
+    // ----------------------------------------------------------------------
+    const snippetColors = ['#dc503c','#e0763a','#e8a838','#8bbf6e','#4caf7d'];
+    
+    // DRY helper function for handling debounced evaluation on input forms
+    function setupLiveStrengthCheck(inputId, textId, barId, warnId, breachMessageFallback, onInputCallback = null) {
+        const input = document.getElementById(inputId);
+        const txt = document.getElementById(textId);
+        const bar = document.getElementById(barId);
+        const wrn = document.getElementById(warnId);
+        let timer;
+
+        input.addEventListener('input', (e) => {
+            clearTimeout(timer);
+            const val = e.target.value;
+            if (onInputCallback) onInputCallback();
+
+            if (!val) {
+                txt.textContent = ''; bar.style.width = '0%'; wrn.style.display = 'none';
+                input.style.borderColor = ''; input.style.opacity = '1';
+                return;
+            }
+
+            txt.textContent = 'Checking...';
+            txt.style.color = 'rgba(232, 241, 242, 0.5)';
+            input.style.opacity = '0.7';
+
+            timer = setTimeout(async () => {
+                try {
+                    const res = await fetch(`${BASE}/v1/demo`, { method: 'POST', body: JSON.stringify({ password: val }) });
+                    if (!res.ok) return;
+                    
+                    const d = await res.json();
+                    
+                    // Race condition fix: Do not populate UI if user has already cleared/changed the field
+                    if (input.value !== val) return;
+                    
+                    input.style.opacity = '1';
+                    txt.textContent = d.strength; 
+                    txt.style.color = snippetColors[d.score];
+                    bar.style.width = `${(d.score / 4) * 100}%`; 
+                    bar.style.backgroundColor = snippetColors[d.score];
+                    input.style.borderColor = snippetColors[d.score];
+                    
+                    if (d.breached) { 
+                        wrn.style.display = 'block'; 
+                        wrn.textContent = d.breach_count ? `⚠ Password found in ${d.breach_count.toLocaleString()} breaches.` : breachMessageFallback; 
+                    } else { 
+                        wrn.style.display = 'none'; 
+                    }
+                    fetchUsage();
+                } catch (err) { 
+                    input.style.opacity = '1'; 
+                }
+            }, 500);
+        });
+    }
+
+    // Initialize Register live logic
+    setupLiveStrengthCheck('demo-reg-pwd', 'demo-reg-str-text', 'demo-reg-str-bar', 'demo-reg-breach', '⚠ Cannot use a breached password.');
+
+    // Initialize Change Password live logic + Match checking
+    const demCpConf = document.getElementById('demo-cp-confirm');
+    const demCpNew = document.getElementById('demo-cp-new');
+    const demCpMatch = document.getElementById('demo-cp-match');
+    
+    const checkCpMatch = () => {
+        if(demCpConf.value && demCpNew.value !== demCpConf.value) { 
+            demCpMatch.style.display = 'block'; demCpConf.style.borderColor = '#dc503c'; 
+        } else { 
+            demCpMatch.style.display = 'none'; demCpConf.style.borderColor = ''; 
+        }
+    };
+    demCpConf.addEventListener('input', checkCpMatch);
+    setupLiveStrengthCheck('demo-cp-new', 'demo-cp-str-text', 'demo-cp-str-bar', 'demo-cp-breach', '⚠ Cannot use a breached password.', checkCpMatch);
+
+    // Login Live Logic (Submit based, not debounced input based)
+    document.getElementById('demo-login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const pwdInput = document.getElementById('demo-login-pwd');
+        const pwd = pwdInput.value;
+        if(!pwd) return;
+        const btn = document.getElementById('demo-login-btn');
+        const alert = document.getElementById('demo-login-alert');
+        
+        btn.disabled = true; btn.textContent = 'Checking...'; alert.style.display = 'none'; pwdInput.style.opacity = '0.7';
+        
+        try {
+            const res = await fetch(`${BASE}/v1/demo`, { method: 'POST', body: JSON.stringify({ password: pwd }) });
+            if (!res.ok) return;
+            const d = await res.json();
+            
+            if (pwdInput.value !== pwd) return;
+            
+            if (d.breached) { 
+                alert.style.display = 'block'; 
+                alert.textContent = `⚠ Action Required: This password was compromised in a data breach. You must reset it before proceeding.`; 
+            } else { 
+                alert.style.display = 'block'; alert.style.color = '#8bbf6e'; alert.style.borderColor = '#8bbf6e'; 
+                alert.style.background = 'rgba(100,180,120,0.1)'; alert.textContent = `✓ Safe! Logging you in...`; 
+                setTimeout(()=>alert.style.display='none', 3000); 
+            }
+            fetchUsage();
+        } catch (e) {} finally { 
+            btn.disabled = false; btn.textContent = 'Sign In'; pwdInput.style.opacity = '1'; 
+        }
+    });
+
+    // ----------------------------------------------------------------------
+    // REGISTRATION NATIVE KEY LOGIC
+    // ----------------------------------------------------------------------
     document.getElementById('reg-btn').addEventListener('click', register);
 
     async function register() {
