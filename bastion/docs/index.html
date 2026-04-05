@@ -257,6 +257,7 @@
         .status-401 { color: #e0763a; background: rgba(224, 118, 58, 0.1); }
         .status-400 { color: #e8a838; background: rgba(232, 168, 56, 0.1); }
         .status-429 { color: #dc503c; background: rgba(220, 80, 60, 0.1); }
+        .status-501 { color: #a78bfa; background: rgba(167, 139, 250, 0.1); }
 
         .callout {
             padding: 0.9rem 1.1rem;
@@ -569,26 +570,29 @@
             <section class="docs-section" id="errors" data-aos="fade-left">
                 <p class="section-label">Reference</p>
                 <h2>Error reference</h2>
-                <p>All errors return a <strong>plain text body</strong> with an appropriate HTTP status code. Handle them using <code>res.text()</code>.</p>
-                
+                <p>All errors return a <strong>JSON body</strong> with an appropriate HTTP status code. Handle them using <code>res.json()</code>. The <code>error</code> field is a stable machine-readable code; the <code>message</code> field is human-readable.</p>
                 <!-- Added table-responsive -->
                 <div class="table-responsive">
                     <table class="error-table">
                         <thead>
-                            <tr><th>Message</th><th>Status</th><th>Meaning</th></tr>
+                            <tr><th>Error Code</th><th>Status</th><th>Message</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>Missing Authorization Header</td><td><span class="status-pill status-401">401</span></td><td>No Authorization header present</td></tr>
-                            <tr><td>Invalid Authorization Header</td><td><span class="status-pill status-401">401</span></td><td>Header is not in Bearer format</td></tr>
-                            <tr><td>Invalid API Key</td><td><span class="status-pill status-401">401</span></td><td>Key does not have a valid <code>bsn_live_</code> prefix</td></tr>
-                            <tr><td>API Key Does Not Exist</td><td><span class="status-pill status-401">401</span></td><td>Prefix is valid but the key is not registered</td></tr>
-                            <tr><td>Invalid Email</td><td><span class="status-pill status-400">400</span></td><td>Email address failed validation</td></tr>
-                            <tr><td>Email Already Exists</td><td><span class="status-pill status-400">400</span></td><td>Email is already registered</td></tr>
-                            <tr><td>Invalid Regeneration Token</td><td><span class="status-pill status-401">401</span></td><td>Regeneration token does not match</td></tr>
-                            <tr><td>Rate Limit Exceeded</td><td><span class="status-pill status-429">429</span></td><td>Daily request limit reached</td></tr>
-                            <tr><td>Invalid JSON Body</td><td><span class="status-pill status-400">400</span></td><td>Request body is missing or malformed</td></tr>
-                            <tr><td>Password cannot exceed 128 characters</td><td><span class="status-pill status-400">400</span></td><td>Password exceeds the maximum allowed length</td></tr>
-                            <tr><td>Password cannot be empty</td><td><span class="status-pill status-400">400</span></td><td>Password is required</td></tr>
+                            <tr><td>MISSING_AUTH_HEADER</td><td><span class="status-pill status-401">401</span></td><td>No Authorization header provided.</td></tr>
+                            <tr><td>INVALID_AUTH_HEADER</td><td><span class="status-pill status-401">401</span></td><td>Authorization header is not in the correct format.</td></tr>
+                            <tr><td>INVALID_API_KEY</td><td><span class="status-pill status-401">401</span></td><td>Key does not have a valid bsn_live_ prefix.</td></tr>
+                            <tr><td>API_KEY_NOT_FOUND</td><td><span class="status-pill status-401">401</span></td><td>Key is valid but not registered.</td></tr>
+                            <tr><td>INVALID_EMAIL</td><td><span class="status-pill status-400">400</span></td><td>Email is not in a valid format.</td></tr>
+                            <tr><td>EMAIL_ALREADY_EXISTS</td><td><span class="status-pill status-400">400</span></td><td>Email is already registered.</td></tr>
+                            <tr><td>INVALID_REGEN_TOKEN</td><td><span class="status-pill status-401">401</span></td><td>Provided regeneration token is invalid.</td></tr>
+                            <tr><td>RATE_LIMIT_EXCEEDED</td><td><span class="status-pill status-429">429</span></td><td>API rate limit exceeded.</td></tr>
+                            <tr><td>DEMO_LIMIT_EXCEEDED</td><td><span class="status-pill status-429">429</span></td><td>Demo limit reached. Sign up for a free API key.</td></tr>
+                            <tr><td>HARD_LIMIT_EXCEEDED</td><td><span class="status-pill status-429">429</span></td><td>User-defined hard limit exceeded.</td></tr>
+                            <tr><td>HARD_LIMIT_TOO_LOW</td><td><span class="status-pill status-400">400</span></td><td>Provided hard limit is below the usage limit.</td></tr>
+                            <tr><td>INVALID_JSON_BODY</td><td><span class="status-pill status-400">400</span></td><td>Request body is missing or malformed.</td></tr>
+                            <tr><td>PASSWORD_EMPTY</td><td><span class="status-pill status-400">400</span></td><td>Password cannot be empty.</td></tr>
+                            <tr><td>PASSWORD_TOO_LONG</td><td><span class="status-pill status-400">400</span></td><td>Password cannot exceed 128 characters.</td></tr>
+                            <tr><td>PAID_TIER_NOT_IMPLEMENTED</td><td><span class="status-pill status-501">501</span></td><td>Features for paid tiers are not implemented yet.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -615,8 +619,8 @@
 });
 
 <span class="kw">if</span> (!res.ok) {
-  <span class="kw">const</span> err = <span class="kw">await</span> res.<span class="fn">text</span>();
-  <span class="fn">console.error</span>(<span class="str">"Error:"</span>, err);
+  <span class="kw">const</span> { error, message } = <span class="kw">await</span> res.<span class="fn">json</span>();
+  <span class="fn">console.error</span>(error, message);
 } <span class="kw">else</span> {
   <span class="kw">const</span> result = <span class="kw">await</span> res.<span class="fn">json</span>();
   <span class="fn">console.log</span>(result);
