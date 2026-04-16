@@ -25,8 +25,6 @@
             border: 1px solid rgba(255, 119, 0, 0.3);
             padding: 0.3rem 0.85rem;
             margin-bottom: 2rem;
-            opacity: 0;
-            animation: fadeUp 0.6s ease forwards 0.1s;
         }
 
         .hero h1 {
@@ -35,8 +33,6 @@
             letter-spacing: -0.02em;
             line-height: 1.1;
             margin-bottom: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.6s ease forwards 0.25s;
         }
         .hero h1 span { color: var(--orange); }
 
@@ -44,11 +40,7 @@
             font-size: 1rem;
             line-height: 1.8;
             color: rgba(232, 241, 242, 0.85);
-            opacity: 0;
-            animation: fadeUp 0.6s ease forwards 0.4s;
         }
-
-        .cta-group { opacity: 0; animation: fadeUp 0.6s ease forwards 0.55s; }
 
         /* Buttons */
         .bstn-btn {
@@ -125,11 +117,6 @@
             margin-bottom: 0.5rem;
         }
         .security-list li::before { content: '-'; position: absolute; left: 0; color: var(--orange); }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
     </style>
 
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -160,16 +147,19 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-10 col-lg-8">
-                    <div class="bstn-tag">Password Audit API</div>
-                    <h1>Know if a password<br>is actually <span>secure</span>.</h1>
-                    <p class="hero-sub mb-5">
+                    <div class="bstn-tag" data-aos="fade-up" data-aos-delay="100">Password Audit API</div>
+                    <h1 data-aos="fade-up" data-aos-delay="200">Know if a password<br>is actually <span>secure</span>.</h1>
+                    <p class="hero-sub mb-5" data-aos="fade-up" data-aos-delay="300">
                         Bastion analyses passwords and returns strength scores, crack time estimates,
                         entropy, and real breach data. Without ever storing, logging, or exposing the raw password.
                     </p>
-                    <div class="cta-group d-flex flex-wrap gap-3 justify-content-center">
+                    <div class="d-flex flex-wrap gap-3 justify-content-center" data-aos="fade-up" data-aos-delay="400">
                         <a class="bstn-btn bstn-btn-primary" href="demo/index.html">Try the Demo</a>
                         <a class="bstn-btn bstn-btn-secondary" href="https://github.com/eande171/bastion">View on GitHub</a>
                     </div>
+                    <p class="hero-sub text-center mt-4" data-aos="fade-up" data-aos-delay="500" style="font-size: 0.82rem; color: rgba(232, 241, 242, 0.4);">
+                        if this helped you, consider supporting me <a href="https://ko-fi.com/eande171">here</a>! thank you so much for checking it out &lt;3
+                    </p>
                 </div>
             </div>
         </div>
@@ -180,28 +170,28 @@
         <div class="container">
             <p class="section-label">What you get back</p>
             <div class="row g-3">
-                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in">
+                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in" data-aos-delay="100">
                     <div class="feature-card">
                         <div class="feature-icon">⚡</div>
                         <div class="feature-title">Strength Score</div>
                         <p class="feature-desc">0–4 score and human-readable label (Very Weak → Very Strong) using the zxcvbn algorithm.</p>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in" data-aos-delay="100">
+                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in" data-aos-delay="200">
                     <div class="feature-card">
                         <div class="feature-icon">⏱</div>
                         <div class="feature-title">Crack Time Estimates</div>
                         <p class="feature-desc">Estimated crack times across four attack scenarios. Throttled/Unthrottled online and fast/slow offline.</p>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in" data-aos-delay="200">
+                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in" data-aos-delay="300">
                     <div class="feature-card">
                         <div class="feature-icon">🔎</div>
                         <div class="feature-title">Breach Detection</div>
                         <p class="feature-desc">Checks the HaveIBeenPwned database via k-anonymity. Only a partial hash is ever sent.</p>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in" data-aos-delay="300">
+                <div class="col-12 col-sm-6 col-lg-3" data-aos="fade-in" data-aos-delay="400">
                     <div class="feature-card">
                         <div class="feature-icon">💡</div>
                         <div class="feature-title">Actionable Feedback</div>
@@ -288,6 +278,8 @@
                 <a href="https://github.com/eande171/bastion">GitHub</a>
                 &nbsp;·&nbsp;
                 <a href="./docs/index.html">Docs</a>
+                &nbsp;·&nbsp;
+                <a href="https://ko-fi.com/eande171">Support Me</a>
             </span>
         </div>
     </div>
