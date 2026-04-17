@@ -1,66 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="X-UA-Compatible" content="IE-EDGE" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Eden Anderson - Projects</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="../style.css" rel="stylesheet">
-
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@400&display=swap" rel="stylesheet">
-
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <link href="../style.css" rel="stylesheet">
+        <style>
+            main {
+                flex: 1;
+                padding: 4rem 1.5rem;
+            }
+            .page-header {
+                margin-bottom: 3rem;
+            }
+            h1 {
+                font-size: clamp(2rem, 5vw, 3rem);
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                margin-bottom: 0.5rem;
+            }
+            h1 span { color: var(--orange); }
+            .page-sub {
+                font-size: 0.92rem;
+                color: rgba(232, 241, 242, 0.5);
+                margin: 0;
+            }
+            a:hover { transform: scale(1); }
+        </style>
     </head>
-    <body class="bg-dark">
-        <script>
-            AOS.init();
-        </script>
-        
-        <div class="container">
-            <div class="row mt-5 mb-5">
-                <div class="col-2">
-                    <a data-aos="fade-right" href="../index.html" style="font-family: 'Courier New', Courier, monospace; color: var(--white); font-size: 2em;">&#8592;</a>
+    <body>
+        <script>AOS.init({ once: true });</script>
+
+        <main>
+            <div class="container">
+
+                <!-- Header -->
+                <div class="page-header">
+                    <a class="back-link" href="../index.html" data-aos="fade-right">← home</a>
+                    <h1 class="mt-4" data-aos="fade-up" data-aos-delay="100"><span>Projects</span></h1>
+                    <p class="page-sub" data-aos="fade-up" data-aos-delay="200">things i've built</p>
                 </div>
-                <div class="col-8 mt-2">
-                    <h1 data-aos="fade-down" class="text-center name-text">Projects</h1>
-                </div>
-                <div class="col-2">
+
+                <div class="row g-3">
+                    <!-- Project: Amalgam -->
+                    <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-in" data-aos-delay="100">
+                        <a href="https://github.com/eande171/amalgam" class="project-card text-decoration-none">
+                            <img class="project-card-logo" src="media/amalgam.svg" alt="Amalgam Logo">
+                            <p class="project-card-title">Amalgam</p>
+                            <p class="project-card-desc">Fully local AI assistant that runs entirely on your machine with data leaving your device.</p>
+                            <span class="project-card-link">→ view on github</span>
+                        </a>
+                    </div>
+
+                    <!-- Project: Rosella -->
+                    <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-in" data-aos-delay="200">
+                        <a href="https://github.com/eande171/rosella" class="project-card text-decoration-none">
+                            <img class="project-card-logo" src="media/rosella.svg" alt="Rosella Logo">
+                            <p class="project-card-title">Rosella</p>
+                            <p class="project-card-desc">Cross-platform scripting language. Write once, run (almost) anywhere, with a clean and minimal syntax.</p>
+                            <span class="project-card-link">→ view on github</span>
+                        </a>
+                    </div>
+
+                    <!-- Project: Bastion -->
+                    <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-in" data-aos-delay="300">
+                        <a href="../bastion/index.html" class="project-card text-decoration-none">
+                            <img class="project-card-logo" src="media/bastion.svg" alt="Bastion Logo">
+                            <p class="project-card-title">Bastion</p>
+                            <p class="project-card-desc">Password Strength API: analyses passwords and returns strength scores, crack time estimates, entropy, and real breach data.</p>
+                            <span class="project-card-link">→ view project</span>
+                        </a>
+                    </div>
 
                 </div>
             </div>
-            <div class="row" style="color: var(--white);">
-                <div data-aos="zoom-in" class="col-12 col-md-4">
-                    <a href="https://github.com/eande171/amalgam" style="width: 95%;">
-                        <img class="card-img-top m-2" src="media/amalgam.svg" alt="Amalgam Logo">
-                        <div class="card-body text-center" style="color: white;">
-                            <h1 class="card-title">Amalgam</h1>
-                            <p class="card-text">Fully Local AI Assistant</p>
-                        </div>
-                    </a>
-                </div>
-                <div data-aos="zoom-in" class="col-12 col-md-4">
-                    <a href="https://github.com/eande171/rosella" style="width: 95%;">
-                        <img class="card-img-top m-2" src="media/rosella.svg" alt="Rosella Logo">
-                        <div class="card-body text-center" style="color: white;">
-                            <h1 class="card-title">Rosella</h1>
-                            <p class="card-text">Cross Platform Scripting Language</p>
-                        </div>
-                    </a>
-                </div>
-                <div data-aos="zoom-in" class="col-12 col-md-4">
-                    <a href="../bastion/index.html" style="width: 95%;">
-                        <img class="card-img-top m-2" src="media/bastion.svg" alt="Bastion Logo">
-                        <div class="card-body text-center" style="color: white;">
-                            <h1 class="card-title">Bastion</h1>
-                            <p class="card-text">Password Strength API</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+        </main>
+
+        <footer>built with ☕ (<a href="https://eande171.hashnode.dev">hot milo</a>) and hot (<a href="https://ko-fi.com/eande171">ko-fi</a>)</footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

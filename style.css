@@ -1,38 +1,131 @@
-:root{
+:root {
     --light-indigo: #44679C;
     --indigo: #2B4162;
     --dark-indigo: #131C2B;
-
     --white: #E8F1F2;
-
     --light-orange: #ff9233;
     --orange: #FF7700;
 }
 
-html {
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    font-size: 17px;
     color: var(--white);
-    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--dark-indigo);
+    background-image:
+        linear-gradient(rgba(68, 103, 156, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(68, 103, 156, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-.name-text {
-    color: var(--white);
-    font-family: "Bitcount Grid Double";
-}
-
-.card-text,
-.card-title {
-    font-family: 'Courier New', Courier, monospace;
-}
-
+/* ── Links ── */
 a {
     color: var(--orange);
     text-decoration: none;
     display: inline-block;
     transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
-    transform-origin: center center; 
+    transform-origin: center center;
+}
+a:hover { transform: scale(1.05); color: var(--light-orange); }
+
+/* ── Tag badge ── */
+.ea-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--orange);
+    border: 1px solid rgba(255, 119, 0, 0.3);
+    padding: 0.28rem 0.8rem;
+    margin-bottom: 1.75rem;
 }
 
-a:hover {
-    transform: scale(1.05);
-    color: var(--light-orange);
+/* ── Section label ── */
+.section-label {
+    font-size: 0.76rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 1rem;
+    opacity: 0.85;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Section divider ── */
+.section-divider {
+    border-top: 1px solid rgba(68, 103, 156, 0.2);
+    padding: 4rem 0;
+}
+
+/* ── Back link ── */
+.back-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    color: rgba(232, 241, 242, 0.5) !important;
+}
+.back-link:hover { color: var(--light-orange) !important; }
+
+/* ── Project card ── */
+.project-card {
+    background: rgba(43, 65, 98, 0.2);
+    border: 1px solid rgba(68, 103, 156, 0.2);
+    padding: 1.5rem;
+    height: 100%;
+    transition: border-color 0.3s ease, background 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.project-card:hover {
+    border-color: rgba(255, 119, 0, 0.3);
+    background: rgba(43, 65, 98, 0.35);
+}
+.project-card-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+.project-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin: 0;
+}
+.project-card-desc {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: rgba(232, 241, 242, 0.6);
+    margin: 0;
+    flex: 1;
+}
+.project-card-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    color: var(--orange) !important;
+    margin-top: auto;
+}
+.project-card-link:hover { color: var(--light-orange) !important; }
+
+/* ── Footer ── */
+footer {
+    padding: 1.75rem 1.5rem;
+    border-top: 1px solid rgba(68, 103, 156, 0.2);
+    font-size: 0.78rem;
+    color: rgba(232, 241, 242, 0.3);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.04em;
 }
