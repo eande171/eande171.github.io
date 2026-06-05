@@ -1,0 +1,196 @@
+main {
+    flex: 1;
+    padding: 4rem 1.5rem;
+}
+
+.page-header {
+    margin-bottom: 3rem;
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+}
+
+h1 span { color: var(--orange); }
+
+h2 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+}
+
+h2 span { color: var(--orange); }
+
+.page-sub {
+    font-size: 0.92rem;
+    color: rgba(232, 241, 242, 0.5);
+    margin: 0;
+}
+
+/* ── Plugin section (full-detail card) ── */
+.plugin-section {
+    background: rgba(43, 65, 98, 0.2);
+    border: 1px solid rgba(68, 103, 156, 0.2);
+    margin-bottom: 2rem;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.plugin-section:hover {
+    border-color: rgba(255, 119, 0, 0.2);
+    background: rgba(43, 65, 98, 0.28);
+}
+
+.plugin-section-banner {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg, #2B4162 0%, #131C2B 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.plugin-section-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.plugin-section-banner-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(232, 241, 242, 0.2);
+    user-select: none;
+}
+
+.plugin-section-body {
+    padding: 2rem;
+}
+
+.mc-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--light-indigo);
+    background: rgba(68, 103, 156, 0.18);
+    border: 1px solid rgba(68, 103, 156, 0.35);
+    padding: 0.2rem 0.55rem;
+}
+
+.plugin-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(232, 241, 242, 0.4);
+    background: rgba(232, 241, 242, 0.05);
+    border: 1px solid rgba(232, 241, 242, 0.12);
+    padding: 0.2rem 0.55rem;
+}
+
+.plugin-detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.plugin-version {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--orange);
+    border: 1px solid rgba(255, 119, 0, 0.3);
+    padding: 0.2rem 0.6rem;
+}
+
+.plugin-detail-desc {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: rgba(232, 241, 242, 0.7);
+    max-width: 680px;
+    margin: 1rem 0 1.5rem;
+}
+
+.plugin-detail-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 2rem;
+}
+
+.plugin-detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+}
+
+.plugin-btn-primary {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--dark-indigo) !important;
+    background: var(--orange);
+    padding: 0.75rem 1.75rem;
+    display: inline-block;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.plugin-btn-primary:hover {
+    background: var(--light-orange);
+    transform: scale(1.04) !important;
+}
+
+.plugin-btn-secondary {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--white) !important;
+    background: transparent;
+    border: 1px solid rgba(232, 241, 242, 0.3);
+    padding: 0.75rem 1.75rem;
+    display: inline-block;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.plugin-btn-secondary:hover {
+    border-color: rgba(232, 241, 242, 0.7);
+    transform: scale(1.04) !important;
+}
+
+/* ── Not-found state ── */
+.plugin-not-found {
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.plugin-not-found h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.plugin-not-found p {
+    color: rgba(232, 241, 242, 0.5);
+    font-size: 0.92rem;
+}
+
+@media (max-width: 576px) {
+    .plugin-detail-banner { height: 180px; }
+    .plugin-detail-actions { flex-direction: column; }
+    .plugin-btn-primary,
+    .plugin-btn-secondary { text-align: center; }
+}
