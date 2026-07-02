@@ -25,6 +25,22 @@ h2 {
 
 h2 span { color: var(--orange); }
 
+.page-fiverr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: rgba(232, 241, 242, 0.35);
+    margin: 0.5rem 0 0;
+    letter-spacing: 0.03em;
+}
+
+.page-fiverr a {
+    color: rgba(232, 241, 242, 0.5) !important;
+}
+
+.page-fiverr a:hover {
+    color: var(--light-orange) !important;
+}
+
 .page-sub {
     font-size: 0.92rem;
     color: rgba(232, 241, 242, 0.5);
